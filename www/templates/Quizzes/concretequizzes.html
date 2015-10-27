@@ -1,0 +1,9 @@
+<ion-view view-title="Concrete Quizzes">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="concretequestion in concretequestions" href="#/app/playlists/{{playlist.id}}">
+        {{concretequestion.title}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

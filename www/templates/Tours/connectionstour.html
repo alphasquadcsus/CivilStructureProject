@@ -1,0 +1,16 @@
+<ion-view view-title="Connections Tour">
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <a class="item item-avatar" href="#">
+                <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
+            </a>
+            <div class="item item-divider"> Detailed Pages </div>
+            <a class="item item-avatar" ng-repeat="connectionstour in connectionstours" href="{{connectionstour.link}}">
+                <img src="{{connectionstour.icon}}" />
+                <h2>{{connectionstour.title}}</h2>
+                <p>{{connectionstour.rating}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

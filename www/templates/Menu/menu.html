@@ -1,0 +1,30 @@
+<ion-side-menus>
+
+    <ion-side-menu side="left" width="180">
+        <ion-header-bar class="bar bar-header bar-dark">
+            <h1 class="title">Menu</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ul class="list">
+                <a href="#/app/tabs/map" class="item" menu-close>Home</a>
+                <a href="#/app/news" class="item" menu-close>What's New?</a>
+                <a href="#/app/resources" class="item" menu-close>Resources</a>
+                <a href="#/app/technical" class="item" menu-close>Technical</a>
+                <a href="#/app/about" class="item" menu-close>About</a>
+            </ul>
+        </ion-content>
+    </ion-side-menu>
+
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar-positive nav-title-slide-ios7">
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+                </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
+
+</ion-side-menus>

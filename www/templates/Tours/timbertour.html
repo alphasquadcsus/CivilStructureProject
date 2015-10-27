@@ -1,0 +1,16 @@
+<ion-view view-title="Timber Tour">
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <a class="item item-avatar" href="#">
+                <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
+            </a>
+            <div class="item item-divider"> Detailed Pages </div>
+            <a class="item item-avatar" ng-repeat="timertour in timertours" href="{{timertour.link}}">
+                <img src="{{timertour.icon}}" />
+                <h2>{{timertour.title}}</h2>
+                <p>{{timertour.rating}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

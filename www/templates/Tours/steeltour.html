@@ -1,0 +1,16 @@
+<ion-view view-title="Steel Tour">
+    <ion-nav-buttons side="left"> </ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <a class="item item-avatar" href="#">
+                <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
+            </a>
+            <div class="item item-divider"> Detailed Pages </div>
+            <a class="item item-avatar" ng-repeat="steeltour in steeltours" href="{{steeltour.link}}">
+                <img src="{{steeltour.icon}}" />
+                <h2>{{steeltour.title}}</h2>
+                <p>{{steeltour.rating}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,16 @@
+<ion-view view-title="Lateral Tour">
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <a class="item item-avatar" href="#">
+                <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
+            </a>
+            <div class="item item-divider"> Detailed Pages </div>
+            <a class="item item-avatar" ng-repeat="lateraltour in lateraltours" href="{{lateraltour.link}}">
+                <img src="{{lateraltour.icon}}" />
+                <h2>{{lateraltour.title}}</h2>
+                <p>{{lateraltour.rating}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

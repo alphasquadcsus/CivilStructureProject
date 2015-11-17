@@ -1,8 +1,42 @@
-<ion-view view-title="{{concretetour.title}}">
+<ion-view title="Detailed Site">
     <ion-nav-buttons side="left"> </ion-nav-buttons>
-    <ion-content>
-        <div class="list">
-            <div class="item item-divider"> Detailed Pages </div>
+    <ion-content ng-repeat="tour in tours">
+        <section class="home-container">
+
+            <div class="row header">
+                <div class="col text-center">
+                    {{tour.title}}
+                </div>
+            </div>
+
+            <a class="item item-list-detail">
+                <ion-scroll direction="x">
+                    <img ng-repeat="picture in tour.pics" ng-src="{{picture.src}}" ng-click="showImages($index)" class="image-list-thumb" />
+                </ion-scroll>
+            </a>
+
+            <div class="row icon-row">
+                <div class="col text-center">
+                    <button class="button button-large button-dark">Take Quiz</button>
+                </div>
+                <div class="col text-center">
+                    <button class="button button-large button-dark">View on map</button>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="card">
+            <div class="item item-divider">
+                Description
+            </div>
+            <div class="item item-text-wrap">
+                {{tour.description}}
+            </div>
+        </div>
+
+        <div class="col text-center">
+            <button class="button button-large button-dark" ng-click="showPopup()">Rate this site</button>
         </div>
     </ion-content>
 </ion-view>

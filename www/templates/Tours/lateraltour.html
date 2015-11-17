@@ -5,8 +5,8 @@
             <a class="item item-avatar" href="#">
                 <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
             </a>
-            <div class="item item-divider"> Detailed Pages </div>
-            <a class="item item-avatar" ng-repeat="lateraltour in lateraltours" href="{{lateraltour.link}}">
+            <div class="item item-divider"> Detailed sites </div>
+            <a class="item item-avatar" ng-repeat="lateraltour in lateraltours" href="#/app/tabs/tours/{{lateraltour.idno}}">
                 <img src="{{lateraltour.icon}}" />
                 <h2>{{lateraltour.title}}</h2>
                 <p>{{lateraltour.rating}}</p>

@@ -5,8 +5,8 @@
             <a class="item item-avatar" href="#">
                 <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
             </a>
-            <div class="item item-divider"> Detailed Pages </div>
-            <a class="item item-avatar" ng-repeat="concretetour in concretetours" href="#/app/tabs/tours/{{concretetour.Id}}">
+            <div class="item item-divider"> Detailed sites </div>
+            <a class="item item-avatar" ng-repeat="concretetour in concretetours" href="#/app/tabs/tours/{{concretetour.idno}}">
                 <img src="{{concretetour.icon}}" />
                 <h2>{{concretetour.title}}</h2>
                 <p>{{concretetour.rating}}</p>

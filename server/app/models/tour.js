@@ -1,24 +1,32 @@
-var mongoose     = require('mongoose');
-var Schema       = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var SingleTour = new Schema({
-   
-    
-});
 
 var TourSchema = new Schema({
-    _id: Number,
+    idnum: Number,
     tourtype: String,
-	title: String,
+    title: String,
     rating: Number,
     icon: String,
-    link: String,
-    description: [{
-        main: String,
-        picture: String
-    }]
+    lat: Number,
+    lon: Number,
+    description: String,
+    technical: String,
+    pics: [
+        {
+            src: String
+        },
+        {
+            src: String
+        },
+        {
+            src: String
+        },
+        {
+            src: String
+        }
+    ]
 });
-
 
 
 module.exports = mongoose.model('Tour', TourSchema);

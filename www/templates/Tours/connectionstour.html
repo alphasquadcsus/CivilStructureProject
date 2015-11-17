@@ -5,8 +5,8 @@
             <a class="item item-avatar" href="#">
                 <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
             </a>
-            <div class="item item-divider"> Detailed Pages </div>
-            <a class="item item-avatar" ng-repeat="connectionstour in connectionstours" href="{{connectionstour.link}}">
+            <div class="item item-divider"> Detailed sites </div>
+            <a class="item item-avatar" ng-repeat="connectionstour in connectionstours" href="#/app/tabs/tours/{{connectionstour.idno}}">
                 <img src="{{connectionstour.icon}}" />
                 <h2>{{connectionstour.title}}</h2>
                 <p>{{connectionstour.rating}}</p>

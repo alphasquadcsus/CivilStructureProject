@@ -55,7 +55,7 @@
          views: {
              'menuContent': {
                  templateUrl: "templates/Menu/resources.html",
-                
+
              }
          }
      })
@@ -106,7 +106,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/timberquizzes.html',
-                 controller: 'quizzesCtrl'
+                 controller: 'timberquizzesCtrl'
              }
          }
      })
@@ -116,6 +116,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/steelquizzes.html',
+                 controller: 'steelquizzesCtrl'
              }
          }
      })
@@ -125,6 +126,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/concretequizzes.html',
+                 controller: 'concretequizzesCtrl'
              }
          }
      })
@@ -134,6 +136,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/connectionsquizzes.html',
+                 controller: 'connectionsquizzesCtrl'
              }
          }
      })
@@ -143,6 +146,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/lateralquizzes.html',
+                 controller: 'lateralquizzesCtrl'
              }
          }
      })
@@ -153,6 +157,16 @@
              'tab-tours': {
                  templateUrl: 'templates/Tabs/tab-tours.html',
                  //controller: 'toursCtrl'
+             }
+         }
+     })
+
+     .state('app.tabs.detailedquiz', {
+         url: '/quizzes/:tourId',
+         views: {
+             'tab-quizzes': {
+                 templateUrl: 'templates/Quizzes/detailedquiz.html',
+                 controller: 'detailedquizCtrl'
              }
          }
      })
@@ -215,17 +229,12 @@
                  controller: 'connectionstoursCtrl'
              }
          }
-     })
-
-     .state('app.tabs.settings', {
-         url: '/settings',
-         views: {
-             'tab-settings': {
-                 templateUrl: 'templates/Tabs/tab-settings.html',
-                 controller: 'settingsCtrl'
-             }
-         }
      });
+
+     
+     
+     
+     
      // if none of the above states are matched, use this as the fallback
      $urlRouterProvider.otherwise('/app/tabs');
  });

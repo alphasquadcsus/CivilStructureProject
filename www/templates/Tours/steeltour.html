@@ -2,9 +2,9 @@
     <ion-nav-buttons side="left"> </ion-nav-buttons>
     <ion-content>
         <div class="list">
-            <a class="item item-avatar" href="#">
-                <button class="button icon-left ion-navigate button-positive">Start the Tour</button>
-            </a>
+            <div class="col text-center">
+                <button class="button icon-left ion-navigate button-positive" ui-sref="app.mapview">Start the tour</button>
+            </div>
             <div class="item item-divider"> Detailed sites </div>
             <a class="item item-avatar" ng-repeat="steeltour in steeltours" href="#/app/tabs/tours/{{steeltour.idno}}">
                 <img src="{{steeltour.icon}}" />

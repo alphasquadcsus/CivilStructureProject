@@ -61,23 +61,23 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
 
 .controller('detailedtourCtrl', function ($scope, $http, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
 
-    $scope.showPopup = function() {
-    $ionicPopup.show({
-        title: 'Rate the site',
-        template: '<div class="item range range-balanced"> <i class="icon ion-sad-outline"></i><input type="range" name="rating" min="0" max="5" value="5"><i class="icon ion-happy-outline"></i></div>',
-        buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-            text: 'Cancel',
-            type: 'button-default',
+    $scope.showPopup = function () {
+        $ionicPopup.show({
+            title: 'Rate the site',
+            template: '<div class="item range range-balanced"> <i class="icon ion-sad-outline"></i><input type="range" name="rating" min="0" max="5" value="5"><i class="icon ion-happy-outline"></i></div>',
+            buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+                text: 'Cancel',
+                type: 'button-default',
   }, {
-            text: 'OK',
-            type: 'button-positive',
-            onTap: function (e) {
-                // Returning a value will cause the promise to resolve with the given value.
-                return scope.data.response;
-            }
+                text: 'OK',
+                type: 'button-positive',
+                onTap: function (e) {
+                    // Returning a value will cause the promise to resolve with the given value.
+                    return scope.data.response;
+                }
   }]
-    });
-}
+        });
+    }
 
 
     $http.get('http://localhost:8080/api/tours/' + $location.path().split("/")[4]).then(function (result) {
@@ -120,6 +120,89 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     };
 })
 
+.controller('detailedquizCtrl', function ($scope, $http, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+
+    $http.get('http://localhost:8080/api/quizzes/' + $location.path().split("/")[4]).then(function (result) {
+        console.log('Success', result);
+        console.log(result.data);
+        $scope.quizzes = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+
+    $scope.answer = [{
+        result: 'test'
+    }];
+    
+
+    $scope.answerChange = function (option, index) {
+        console.log(option);
+        console.log(index);
+        $scope.answer[index] = option;
+        console.log($scope.answer);
+        console.log($scope.answer[0]);
+        console.log("Selected, text:", option.options, "value:", $scope.quizzes.questions);
+        //console.log($scope.quizzes[0].questions[1].answer);
+        
+    };
+
+    return {
+		getQuestion: function(id) {
+			if(id < $scope.quizzes.length) {
+				return questions[id];
+			} else {
+				return false;
+			}
+		}
+	};
+})
+
+
+.controller('concretequizzesCtrl', function ($scope, $http) {
+    $http.get('http://localhost:8080/api/concretetours').then(function (result) {
+        console.log('Success', result);
+        $scope.concretetours = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+})
+
+.controller('steelquizzesCtrl', function ($scope, $http) {
+    $http.get('http://localhost:8080/api/steeltours').then(function (result) {
+        console.log('Success', result);
+        $scope.steeltours = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+})
+
+.controller('lateralquizzesCtrl', function ($scope, $http) {
+    $http.get('http://localhost:8080/api/lateraltours').then(function (result) {
+        console.log('Success', result);
+        $scope.lateraltours = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+})
+
+.controller('timberquizzesCtrl', function ($scope, $http) {
+    $http.get('http://localhost:8080/api/timbertours').then(function (result) {
+        console.log('Success', result);
+        $scope.timbertours = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+})
+
+.controller('connectionsquizzesCtrl', function ($scope, $http) {
+    $http.get('http://localhost:8080/api/connectionstours').then(function (result) {
+        console.log('Success', result);
+        $scope.connectionstours = result.data;
+    }, function (err) {
+        console.error('ERR', err);
+    });
+})
+
 .controller('newsCtrl', function ($scope, $http) {
     $http.get('http://localhost:8080/api/news').then(function (result) {
         console.log('Success', result);
@@ -132,28 +215,17 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
 
 .controller('quizzesCtrl', function ($scope, $ionicSideMenuDelegate, $ionicModal) {
 
-    $scope.timberquestions = [
-        {
-            title: 'Question 1'
-        },
-        {
-            title: 'Question 2'
-        },
-        {
-            title: 'Question 3'
-        },
-  ];
-
     $ionicModal.fromTemplateUrl('templates/Quizzes/quizregister.html', function (modal) {
         $scope.modal = modal;
     }, {
         animation: 'slide-in-up'
     });
 
+
 })
 
 .controller('quizloginCtrl', function ($scope, $ionicSideMenuDelegate, $ionicPopup) {
-    
+
     $scope.data = {};
     $scope.showLogin = function () {
         var myPopup = $ionicPopup.show({
@@ -185,24 +257,8 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     };
 })
 
-.controller('settingsCtrl', function ($scope) {
-    $scope.settingsList = [
-        {
-            text: "Wireless",
-            checked: true
-            },
-        {
-            text: "GPS",
-            checked: false
-            },
-        {
-            text: "Bluetooth",
-            checked: false
-            }
-  ];
-})
 
-.controller('mapCtrl', function ($scope, $ionicSideMenuDelegate, $ionicLoading, $compile, $ionicPopup) {
+.controller('mapCtrl', function ($scope, $ionicSideMenuDelegate, $ionicLoading, $compile, $ionicPopup, $http) {
 
     $ionicSideMenuDelegate.canDragContent(false);
 
@@ -224,6 +280,7 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
         map: map,
         title: 'Sac State'
     });
+
 
     var onSuccess = function (position) {
         var myLatlng2 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -267,19 +324,19 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
 
 
 
-    /*        var info =('Latitude: '          + position.coords.latitude          + '\n' +
-                'Longitude: '         + position.coords.longitude         + '\n' +
-                'Altitude: '          + position.coords.altitude          + '\n' +
-                'Accuracy: '          + position.coords.accuracy          + '\n' +
-                'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-                'Heading: '           + position.coords.heading           + '\n' +
-                'Speed: '             + position.coords.speed             + '\n' +
-                'Timestamp: '         + position.timestamp                + '\n');
-          
-               $ionicPopup.alert({
-                      title: 'Popup',
-                      content: info 
-                  });*/
+/*        var info =('Latitude: '          + position.coords.latitude          + '\n' +
+            'Longitude: '         + position.coords.longitude         + '\n' +
+            'Altitude: '          + position.coords.altitude          + '\n' +
+            'Accuracy: '          + position.coords.accuracy          + '\n' +
+            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+            'Heading: '           + position.coords.heading           + '\n' +
+            'Speed: '             + position.coords.speed             + '\n' +
+            'Timestamp: '         + position.timestamp                + '\n');
+      
+           $ionicPopup.alert({
+                  title: 'Popup',
+                  content: info 
+              });*/
 
 // This is for the javascript google maps api, leaving here just in case
 

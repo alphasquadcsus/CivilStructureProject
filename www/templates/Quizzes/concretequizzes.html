@@ -1,8 +1,8 @@
 <ion-view view-title="Concrete Quizzes">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="concretequestion in concretequestions">
-        {{concretequestion.title}}
+      <ion-item ng-repeat="concretetour in concretetours" href="#/app/tabs/quizzes/{{concretetour.idno}}">
+        {{concretetour.title}}
       </ion-item>
     </ion-list>
   </ion-content>

@@ -1,0 +1,23 @@
+<ion-view title="Quiz">
+    <ion-nav-buttons side="left"> </ion-nav-buttons>
+    <ion-content ng-repeat="quiz in quizzes">
+        <ion-item ng-repeat="question in quiz.questions">
+
+            {{question.question}}
+            <ul class="list">
+                <ion-radio ng-repeat="option in question.options" ng-value="option.option" ng-model="answer.result" ng-change="answerChange(option.option, question.qID)" name="{{question.question}}">
+                    {{option.option}}
+                </ion-radio>
+            </ul>
+
+            <div class="item item-divider">
+                Selected Value: {{answer.result}}
+            </div>
+
+        </ion-item>
+
+        <button class="button button-full button-assertive" ui-sref="#" ng-click="">
+            Submit
+        </button>
+    </ion-content>
+</ion-view>

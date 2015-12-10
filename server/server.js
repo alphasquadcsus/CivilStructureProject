@@ -17,6 +17,7 @@ var port = process.env.PORT || 8080; // set our port
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://73.41.74.242:27017/CivilApp'); // connect to our database
 var Tour = require('./app/models/tour');
+var Quiz = require('./app/models/quizzes');
 var News = require('./app/models/news');
 
 // ROUTES FOR OUR API
@@ -163,7 +164,7 @@ router.route('/timbertours')
 // ----------------------------------------------------
 router.route('/tours/:tour_id')
 
-//get the bear with that id (accessed at GET http://localhost:8080/api/tours/:tour_id)
+//get the tour with that id (accessed at GET http://localhost:8080/api/tours/:tour_id)
 .get(function (req, res) {
     Tour.find({
         'idno': req.params.tour_id
@@ -208,6 +209,21 @@ router.route('/tours/:tour_id')
     });
 });
 
+// on routes that end in /quizzes/:quiz_id
+// ----------------------------------------------------
+router.route('/quizzes/:quiz_id')
+
+//get the quiz with that id (accessed at GET http://localhost:8080/api/quizzes/:quiz_id)
+.get(function (req, res) {
+    Quiz.find({
+        'idno': req.params.quiz_id
+    }, ('idno title questions'), function (err, quiz) {
+        if (err)
+            res.send(err);
+        
+        res.json(quiz);
+    });
+});
 
 // REGISTER OUR ROUTES
 
@@ -217,19 +233,3 @@ app.use('/api', router);
 
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
-
-/*db.tours.insert(
-{
-    _id: "12",
-    tourtype: "concrete",
-    title: "TEST",
-    icon: "img/concreteicon.png",
-    rating: 2.4,
-    link: "#",
-    description:{
-        main: "test",
-        picture: "test.jpg"
-    }
-  }
-)*/

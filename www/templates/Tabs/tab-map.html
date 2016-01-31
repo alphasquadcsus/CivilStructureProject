@@ -3,51 +3,33 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content>
-       
+
         <div class="item item-divider">
             Choose Tour Type
         </div>
-        <ul class="list">
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                Steel
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                Timber
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                Concrete
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                Lateral
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                Connections
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                All
-            </li>
 
+        <ul class="list" id="options">
+            <ion-radio icon="ion-location" ng-model="tours.name" value="steeltours">
+                Steel
+            </ion-radio>
+            <ion-radio icon="ion-location" ng-model="tours.name" value="concretetours">
+                Concrete
+            </ion-radio>
+            <ion-radio icon="ion-location" ng-model="tours.name" value="timbertours">
+                Timber
+            </ion-radio>
+            <ion-radio icon="ion-location" ng-model="tours.name" value="lateraltours">
+                Lateral
+            </ion-radio>
+            <ion-radio icon="ion-location" ng-model="tours.name" value="connectionstours">
+                Connections
+            </ion-radio>
+            <ion-radio icon="ion-location" ng-model="tours.name" value="tours">
+                All
+            </ion-radio>
         </ul>
 
-        <button class="button button-full button-assertive" ui-sref="app.mapview">
+        <button class="button ion-map button-large button-custom col col-33 col-offset-33" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
             View Map
         </button>
 

@@ -1,23 +1,60 @@
 <ion-view title="Quiz">
     <ion-nav-buttons side="left"> </ion-nav-buttons>
-    <ion-content ng-repeat="quiz in quizzes">
-        <ion-item ng-repeat="question in quiz.questions">
+    <!--<ion-content ng-repeat="quiz in quizzes">-->
+    <ion-content>
 
-            {{question.question}}
-            <ul class="list">
-                <ion-radio ng-repeat="option in question.options" ng-value="option.option" ng-model="answer.result" ng-change="answerChange(option.option, question.qID)" name="{{question.question}}">
-                    {{option.option}}
-                </ion-radio>
-            </ul>
+        <div class="quiz-area" ng-show="inProgress">
+            <div ng-show="!quizOver">
 
-            <div class="item item-divider">
-                Selected Value: {{answer.result}}
+                <ion-item id="question" class="item-text-wrap">
+                    {{question}}
+                </ion-item>
+                
+                <ul class="list" id="options">
+                    <ion-radio id="option" ng-repeat="option in options" value="{{option}}" ng-model="options.option" name="{{question}}">
+                        {{option}}
+                    </ion-radio>
+                </ul>
+                
+                <div class="item item-divider">
+                    Selected Answer: {{options.option}}
+                </div>
+                <div class="item item-divider">
+                    Correct Answer: {{answer}}
+                </div>
+
+                <button class="button button-large button-custom col col-33 col-offset-33" ng-click="checkAnswer(options.option, question.qID)" ng-show="answerMode">
+                    Submit
+                </button>
+
+                <div ng-show="!answerMode">
+                    <button class="button button-large button-custom col col-33 col-offset-33" ng-click="nextQuestion()">Next</button>
+
+                    <div class="card">
+                        <div class="item item-text-wrap">
+                            <span ng-show="correctAns"><center>That is correct!</center></span>
+                            <span ng-show="!correctAns"><center>Sorry, that is an incorrect answer!</center></span>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
-        </ion-item>
 
-        <button class="button button-full button-assertive" ui-sref="#" ng-click="">
-            Submit
-        </button>
+            <div id="score" class="bar bar-positive">
+                <h1 class="title">Score: {{score}}</h1>
+            </div>
+
+            <div ng-show="quizOver">
+                <h2>Quiz is over</h2>
+                <button class="button button-large button-custom col col-33 col-offset-33" ng-click="reset()">Play again</button>
+            </div>
+
+        </div>
+        <div class="intro" ng-show="!inProgress">
+            <img src="img/quiz.gif" style="max-width: 80%; padding-bottom: 80px; padding-top: 80px;" class="col col-10 col-offset-10" />
+            <button class="button button-large button-custom col col-33 col-offset-33" id="startQuiz" ng-click="start()">Start the Quiz</button>
+        </div>
+
     </ion-content>
 </ion-view>

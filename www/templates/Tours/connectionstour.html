@@ -1,10 +1,10 @@
 <ion-view view-title="Connections Tour">
     <ion-nav-buttons side="left"></ion-nav-buttons>
     <ion-content>
+        <div id="startTour" class="col text-center">
+            <button class="button icon-left ion-navigate button-custom" ui-sref="app.mapview">Start the Tour</button>
+        </div>
         <div class="list">
-            <div class="col text-center">
-                <button class="button icon-left ion-navigate button-positive" ui-sref="app.mapview">Start the tour</button>
-            </div>
             <div class="item item-divider"> Detailed sites </div>
             <a class="item item-avatar" ng-repeat="connectionstour in connectionstours" href="#/app/tabs/tours/{{connectionstour.idno}}">
                 <img src="{{connectionstour.icon}}" />

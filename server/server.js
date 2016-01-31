@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080; // set our port
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://73.41.74.242:27017/CivilApp'); // connect to our database
+mongoose.connect('mongodb://rick:omglol@73.41.74.242:27017/CivilApp'); // connect to our database
 var Tour = require('./app/models/tour');
 var Quiz = require('./app/models/quizzes');
 var News = require('./app/models/news');
@@ -83,9 +83,7 @@ router.route('/tours')
         tour.title = req.body.title;
         tour.rating = req.body.rating;
         tour.icon = req.body.icon;
-        tour.link = req.body.link;
         tour.description = req.body.description;
-        
 
         tour.save(function (err) {
             if (err)
@@ -109,7 +107,7 @@ router.route('/concretetours')
     .get(function (req, res) {
         Tour.find({
             'tourtype': "concrete"
-        }, ('idno title rating icon'), function (err, tours) {
+        }, ('idno title rating icon lat lon'), function (err, tours) {
             if (err)
                 res.send(err);
             res.json(tours);
@@ -120,7 +118,7 @@ router.route('/connectionstours')
     .get(function (req, res) {
         Tour.find({
             'tourtype': "connections"
-        }, ('idno title rating icon'), function (err, tours) {
+        }, ('idno title rating icon lat lon'), function (err, tours) {
             if (err)
                 res.send(err);
             res.json(tours);
@@ -131,7 +129,7 @@ router.route('/lateraltours')
     .get(function (req, res) {
         Tour.find({
             'tourtype': "lateral"
-        }, ('idno title rating icon'), function (err, tours) {
+        }, ('idno title rating icon lat lon'), function (err, tours) {
             if (err)
                 res.send(err);
             res.json(tours);
@@ -142,7 +140,7 @@ router.route('/steeltours')
     .get(function (req, res) {
         Tour.find({
             'tourtype': "steel"
-        }, ('idno title rating icon'), function (err, tours) {
+        }, ('idno title rating icon lat lon'), function (err, tours) {
             if (err)
                 res.send(err);
             res.json(tours);
@@ -153,7 +151,7 @@ router.route('/timbertours')
     .get(function (req, res) {
         Tour.find({
             'tourtype': "timber"
-        }, ('idno title rating icon'), function (err, tours) {
+        }, ('idno title rating icon lat lon'), function (err, tours) {
             if (err)
                 res.send(err);
             res.json(tours);
@@ -217,7 +215,7 @@ router.route('/quizzes/:quiz_id')
 .get(function (req, res) {
     Quiz.find({
         'idno': req.params.quiz_id
-    }, ('idno title questions'), function (err, quiz) {
+    }, ('idno questions'), function (err, quiz) {
         if (err)
             res.send(err);
         
@@ -226,10 +224,8 @@ router.route('/quizzes/:quiz_id')
 });
 
 // REGISTER OUR ROUTES
-
 app.use('/api', router);
 
 // START THE SERVER
-
 app.listen(port);
 console.log('Magic happens on port ' + port);

@@ -1,5 +1,47 @@
+ .custom-headerbar{
+    color : #cba757 !important;
+    background-color:#095a1f!important;
+ }
+
+ .custom-menubar{
+    color : #cba757 !important;
+    background-color:#095a1f!important;
+ }
+
+.button-icon{
+  color:#ffffff !important;
+}
+
+.button-custom {
+    background-color: #000000 !important;
+    color:#cba757 !important;
+    font-size: 24px !important;
+}
+
+#startTour {
+    padding: 40px;
+}
+#question {
+    font-size: 24px !important;
+    font-weight: bolder !important;
+    padding: 30px;
+}
+
+#options {
+    padding: 20px;
+}
+
+#option {
+    font-size: 18px;
+    font-weight:bold !important;
+}
+
+.radio-icon {
+  color: #095a1f;
+}
+
 h1 {
-    text-align: center
+    text-align: center;
 }
 
 .angular-google-map-container { 

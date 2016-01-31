@@ -1,4 +1,4 @@
-angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map testing.
+angular.module('app.controllers', ['ionic'])
 
 // With the new view caching in Ionic, Controllers are only called
 // when they are recreated or on app start, instead of every page change.
@@ -14,52 +14,58 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     };
 })
 
-.controller('concretetoursCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/concretetours').then(function (result) {
-        console.log('Success', result);
-        $scope.concretetours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
+.directive('hideTabs', function ($rootScope) {
+    return {
+        restrict: 'A',
+        link: function ($scope, $el) {
+            $rootScope.hideTabs = 'tabs-item-hide';
+            $scope.$on('$destroy', function () {
+                $rootScope.hideTabs = '';
+            });
+        }
+    };
 })
 
-.controller('steeltoursCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/steeltours').then(function (result) {
-        console.log('Success', result);
-        $scope.steeltours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
+.controller('concretetoursCtrl', ['$scope', 'concretetours', 'tourmarkers', function ($scope, tours, tourmarkers) {
+    tours.success(function (data) {
+        $scope.concretetours = data;
     });
-})
 
-.controller('lateraltoursCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/lateraltours').then(function (result) {
-        console.log('Success', result);
-        $scope.lateraltours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
+    $scope.setTourMarkers = function (tourtype) {
+        tourmarkers.setTourMarkers(tourtype);
+    };
+    
+}])
+
+.controller('steeltoursCtrl', ['$scope', 'steeltours', function ($scope, tours) {
+    tours.success(function (data) {
+        $scope.steeltours = data;
     });
-})
+}])
 
-.controller('timbertoursCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/timbertours').then(function (result) {
-        console.log('Success', result);
-        $scope.timbertours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
+.controller('lateraltoursCtrl', ['$scope', 'lateraltours', function ($scope, tours) {
+    tours.success(function (data) {
+        $scope.lateraltours = data;
     });
-})
+}])
 
-.controller('connectionstoursCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/connectionstours').then(function (result) {
-        console.log('Success', result);
-        $scope.connectionstours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
+.controller('timbertoursCtrl', ['$scope', 'timbertours', function ($scope, tours) {
+    tours.success(function (data) {
+        $scope.timbertours = data;
     });
-})
+}])
 
-.controller('detailedtourCtrl', function ($scope, $http, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+.controller('connectionstoursCtrl', ['$scope', 'connectionstours', function ($scope, tours) {
+    tours.success(function (data) {
+        $scope.connectionstours = data;
+    });
+}])
+
+.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', function ($scope, tours, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+
+    tours.getTour($location.path().split("/")[4]).success(function (data) {
+        $scope.tours = data;
+    });
 
     $scope.showPopup = function () {
         $ionicPopup.show({
@@ -77,19 +83,9 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
                 }
   }]
         });
-    }
-
-
-    $http.get('http://localhost:8080/api/tours/' + $location.path().split("/")[4]).then(function (result) {
-        console.log('Success', result);
-        console.log(result.data);
-        $scope.tours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
+    };
 
     $scope.zoomMin = 1;
-
 
     $scope.showImages = function (index) {
         $scope.activeSlide = index;
@@ -118,90 +114,61 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
             $ionicSlideBoxDelegate.enableSlide(false);
         }
     };
-})
+}])
 
-.controller('detailedquizCtrl', function ($scope, $http, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+.controller('detailedquizCtrl', ['$scope', '$http', '$location', 'quiz', function ($scope, $http, $location, quiz) {
 
-    $http.get('http://localhost:8080/api/quizzes/' + $location.path().split("/")[4]).then(function (result) {
-        console.log('Success', result);
-        console.log(result.data);
-        $scope.quizzes = result.data;
-    }, function (err) {
-        console.error('ERR', err);
+    quiz.getQuiz($location.path().split("/")[4]).success(function (data) {
+        $scope.questions = data[0].questions;
     });
 
-    $scope.answer = [{
-        result: 'test'
-    }];
-    
-
-    $scope.answerChange = function (option, index) {
-        console.log(option);
-        console.log(index);
-        $scope.answer[index] = option;
-        console.log($scope.answer);
-        console.log($scope.answer[0]);
-        console.log("Selected, text:", option.options, "value:", $scope.quizzes.questions);
-        //console.log($scope.quizzes[0].questions[1].answer);
-        
+    $scope.start = function () {
+        $scope.id = 0;
+        $scope.quizOver = false;
+        $scope.inProgress = true;
+        $scope.score = 0;
+        $scope.getQuestion();
     };
 
-    return {
-		getQuestion: function(id) {
-			if(id < $scope.quizzes.length) {
-				return questions[id];
-			} else {
-				return false;
-			}
-		}
-	};
-})
+    $scope.reset = function () {
+        $scope.inProgress = false;
+        $scope.score = 0;
+    };
 
+    $scope.getQuestion = function () {
+        console.log("Getting Question:");
+        console.log($scope.id);
+        var q = quiz.getQuestion($scope.questions, $scope.id);
+        if (q) {
+            $scope.question = q.question;
+            console.log(q);
+            $scope.options = q.options;
+            $scope.answer = q.answer;
+            $scope.answerMode = true;
+        } else {
+            $scope.quizOver = true;
+        }
+    };
 
-.controller('concretequizzesCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/concretetours').then(function (result) {
-        console.log('Success', result);
-        $scope.concretetours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
+    $scope.checkAnswer = function (option, index) {
+        //if (!$('input[name=answer]:checked').length) return;
+        //var ans = $('input[name=answer]:checked').val();
+        var ans = option;
+        if (ans == $scope.options[$scope.answer]) {
+            $scope.score++;
+            $scope.correctAns = true;
+        } else {
+            $scope.correctAns = false;
+        }
+        $scope.answerMode = false;
+    };
 
-.controller('steelquizzesCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/steeltours').then(function (result) {
-        console.log('Success', result);
-        $scope.steeltours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
+    $scope.nextQuestion = function () {
+        $scope.id++;
+        $scope.getQuestion();
+    };
 
-.controller('lateralquizzesCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/lateraltours').then(function (result) {
-        console.log('Success', result);
-        $scope.lateraltours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
-
-.controller('timberquizzesCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/timbertours').then(function (result) {
-        console.log('Success', result);
-        $scope.timbertours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
-
-.controller('connectionsquizzesCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/connectionstours').then(function (result) {
-        console.log('Success', result);
-        $scope.connectionstours = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
+}])
 
 .controller('newsCtrl', function ($scope, $http) {
     $http.get('http://localhost:8080/api/news').then(function (result) {
@@ -212,8 +179,7 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     });
 })
 
-
-.controller('quizzesCtrl', function ($scope, $ionicSideMenuDelegate, $ionicModal) {
+/*.controller('quizzesCtrl', function ($scope, $ionicSideMenuDelegate, $ionicModal) {
 
     $ionicModal.fromTemplateUrl('templates/Quizzes/quizregister.html', function (modal) {
         $scope.modal = modal;
@@ -222,9 +188,9 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     });
 
 
-})
+})*/
 
-.controller('quizloginCtrl', function ($scope, $ionicSideMenuDelegate, $ionicPopup) {
+/*.controller('quizloginCtrl', function ($scope, $ionicSideMenuDelegate, $ionicPopup) {
 
     $scope.data = {};
     $scope.showLogin = function () {
@@ -255,12 +221,66 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
             console.log('Tapped!', res);
         });
     };
+})*/
+
+.controller('premapCtrl', function ($scope, tourmarkers) {
+
+    $scope.tours = {
+        name: "none"
+    };
+
+    $scope.setTourMarkers = function (tourtype) {
+        tourmarkers.setTourMarkers(tourtype);
+    };
 })
 
-
-.controller('mapCtrl', function ($scope, $ionicSideMenuDelegate, $ionicLoading, $compile, $ionicPopup, $http) {
+.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup) {
 
     $ionicSideMenuDelegate.canDragContent(false);
+
+    $scope.getTourMarkers = function () {
+        tourmarkers.getTourMarkers().success(function (data) {
+            $scope.tourmarkers = data;
+            console.log($scope.tourmarkers);
+            drawMarkers();
+        });
+    };
+
+    var drawMarkers = function () {
+
+        var markers;
+        var content;
+        var infoWindow;
+
+        for (var i = 0; i < $scope.tourmarkers.length; i++) {
+            content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
+                '<br />' +
+                '<p>' +
+
+                '</p>';
+
+            infoWindow = new google.maps.InfoWindow({
+                content: content
+            });
+
+            var point = new google.maps.LatLng($scope.tourmarkers[i].lat, $scope.tourmarkers[i].lon);
+
+            markers = new google.maps.Marker({
+                label: "S",
+                animation: google.maps.Animation.DROP,
+                position: point,
+                map: map,
+                info: content
+            });
+            //SCOPE: 'this' refers to the current markers object, we pass in the info and marker
+            google.maps.event.addListener(markers, 'click', function () {
+                infoWindow.setContent(this.info);
+                infoWindow.open(map, this);
+            });
+        }
+
+    };
+
 
     var myLatlng = new google.maps.LatLng(38.5602, -121.4241);
 
@@ -272,8 +292,7 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
         disableDefaultUI: true
     };
 
-    var map = new google.maps.Map(document.getElementById("map"),
-        mapOptions);
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     var marker = new google.maps.Marker({
         position: myLatlng,
@@ -281,29 +300,9 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
         title: 'Sac State'
     });
 
-
     var onSuccess = function (position) {
-        var myLatlng2 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-        //Marker + infowindow + angularjs compiled ng-click
-        var contentString = "<div><a ng-click='clickTest()'>Click me!</a></div>";
-        var compiled = $compile(contentString)($scope);
-
-        var infowindow = new google.maps.InfoWindow({
-            content: compiled[0]
-        });
-
-        marker.setPosition(
-            new google.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude)
-        );
-
-
-        google.maps.event.addListener(marker, 'click', function () {
-            infowindow.open(map, marker);
-        });
-
+        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
         $scope.map = map;
         //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     };
@@ -320,85 +319,3 @@ angular.module('app.controllers', ['ionic']) //Remove 'ionic later? google map t
     });
 
 });
-
-
-
-
-/*        var info =('Latitude: '          + position.coords.latitude          + '\n' +
-            'Longitude: '         + position.coords.longitude         + '\n' +
-            'Altitude: '          + position.coords.altitude          + '\n' +
-            'Accuracy: '          + position.coords.accuracy          + '\n' +
-            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-            'Heading: '           + position.coords.heading           + '\n' +
-            'Speed: '             + position.coords.speed             + '\n' +
-            'Timestamp: '         + position.timestamp                + '\n');
-      
-           $ionicPopup.alert({
-                  title: 'Popup',
-                  content: info 
-              });*/
-
-// This is for the javascript google maps api, leaving here just in case
-
-/*    $ionicSideMenuDelegate.canDragContent(false);
-    $scope.init = function () {
-            $ionicPopup.alert({
-                title: 'Popup',
-                content: 'Please enable GPS for best experience'
-            });
-
-            var myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-            var mapOptions = {
-                center: myLatlng,
-                zoom: 16,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoomControl: true,
-                disableDefaultUI: true
-            };
-            var map = new google.maps.Map(document.getElementById("map"),
-                mapOptions);
-
-            //Marker + infowindow + angularjs compiled ng-click
-            var contentString = "<div><a ng-click='clickTest()'>Click me!</a></div>";
-            var compiled = $compile(contentString)($scope);
-
-            var infowindow = new google.maps.InfoWindow({
-                content: compiled[0]
-            });
-
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                title: 'Sac State'
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker);
-            });
-
-            $scope.map = map;
-        }
-
-
-    $scope.centerOnMe = function () {
-        if (!$scope.map) {
-            return;
-        }
-
-        $scope.loading = $ionicLoading.show({
-            content: 'Getting current location...',
-            showBackdrop: false
-        });
-
-        navigator.geolocation.getCurrentPosition(function (pos) {
-            $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-            $scope.loading.hide();
-        }, function (error) {
-            alert('Unable to get location: ' + error.message);
-        });
-    };
-
-    $scope.clickTest = function () {
-        alert('Example of infowindow with ng-click')
-    };*/

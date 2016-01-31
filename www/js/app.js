@@ -37,6 +37,7 @@
          views: {
              'menuContent': {
                  templateUrl: "templates/Tabs/tabs.html",
+                 //controller: "tabCtrl"
              }
          }
      })
@@ -70,11 +71,11 @@
          }
      })
 
-     .state('app.mapview', {
-         url: '/mapview',
+     .state('app.tabs.mapview', {
+         url: '/map/tourmap',
          views: {
-             'menuContent': {
-                 templateUrl: 'templates/mapview.html',
+             'tab-map': {
+                 templateUrl: 'templates/Tabs/mapview.html',
                  controller: 'mapCtrl'
              }
          }
@@ -85,18 +86,17 @@
          views: {
              'tab-map': {
                  templateUrl: 'templates/Tabs/tab-map.html',
-                 //controller: 'mapCtrl'
+                 controller: 'premapCtrl'
              }
          }
      })
-
 
      .state('app.tabs.quizzes', {
          url: '/quizzes',
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Tabs/tab-quizzes.html',
-                 controller: 'quizzesCtrl'
+                 //controller: 'quizzesCtrl'
              }
          }
      })
@@ -106,7 +106,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/timberquizzes.html',
-                 controller: 'timberquizzesCtrl'
+                 controller: 'timbertoursCtrl'
              }
          }
      })
@@ -116,7 +116,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/steelquizzes.html',
-                 controller: 'steelquizzesCtrl'
+                 controller: 'steeltoursCtrl'
              }
          }
      })
@@ -126,7 +126,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/concretequizzes.html',
-                 controller: 'concretequizzesCtrl'
+                 controller: 'concretetoursCtrl'
              }
          }
      })
@@ -136,7 +136,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/connectionsquizzes.html',
-                 controller: 'connectionsquizzesCtrl'
+                 controller: 'connectionstoursCtrl'
              }
          }
      })
@@ -146,7 +146,7 @@
          views: {
              'tab-quizzes': {
                  templateUrl: 'templates/Quizzes/lateralquizzes.html',
-                 controller: 'lateralquizzesCtrl'
+                 controller: 'lateraltoursCtrl'
              }
          }
      })
@@ -231,10 +231,6 @@
          }
      });
 
-     
-     
-     
-     
      // if none of the above states are matched, use this as the fallback
      $urlRouterProvider.otherwise('/app/tabs');
  });

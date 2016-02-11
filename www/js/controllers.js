@@ -272,11 +272,50 @@ angular.module('app.controllers', ['ionic'])
                 map: map,
                 info: content
             });
+			
             //SCOPE: 'this' refers to the current markers object, we pass in the info and marker
             google.maps.event.addListener(markers, 'click', function () {
                 infoWindow.setContent(this.info);
                 infoWindow.open(map, this);
             });
+			/////////////
+function find_closest_marker( marker, tourmarkers ) {    
+    var pi = Math.PI;
+    var R = 6371; //equatorial radius
+    var distances = [];
+    var closest = -1;
+	var lat1 = marker.position.lat();
+	var lon1 = marker.position.lng();
+
+    for( i=0;i<tourmarkers.length; i++ ) {  
+        var lat2 = tourmarkers[i].position.lat();
+        var lon2 = tourmarkers[i].position.lng();
+
+        var chLat = lat2-lat1;
+        var chLon = lon2-lon1;
+
+        var dLat = chLat*(pi/180);
+        var dLon = chLon*(pi/180);
+
+        var rLat1 = lat1*(pi/180);
+        var rLat2 = lat2*(pi/180);
+
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(rLat1) * Math.cos(rLat2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c;
+
+        distances[i] = d;
+        if ( closest == -1 || d < distances[closest] ) {
+            closest = i;
+        }
+    }
+
+    // (debug) The closest marker is:
+    return (tourmarkers[closest]);
+}
+			/////////////////////////////////////////////////////////
+
         }
 
     };
@@ -299,10 +338,37 @@ angular.module('app.controllers', ['ionic'])
         map: map,
         title: 'Sac State'
     });
+////////////Directions Display/////////////////
+	var directionsDisplay = new google.maps.DirectionsRenderer;
+	var directionsService = new google.maps.DirectionsService;
+	
+	
+function calculateAndDisplayRoute(directionsService, directionsDisplay, marker, dest) {
+	directionsService.route({
+		//origin: {lat:38.53, lng: -121.41555},
+		origin: marker.position,
+		destination: {lat:38.562605, lng: -121.419683},
+		//destination: dest.position,
+		travelMode: google.maps.TravelMode.WALKING
+	}, function(response,status) {
+		if(status==google.maps.DirectionsStatus.OK) {
+			directionsDisplay.setDirections(response);
+		} else {
+			window.alert('Directions request failed due to ' + status);
+		}
+	});
+}
+	
+	
+	////////////////////////
 
     var onSuccess = function (position) {
 
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		directionsDisplay.setMap(map);
+		var dest = new google.maps.Marker({});
+		//dest = find_closest_marker(marker, tourmarkers);  // if you can get this line to work without commenting it out then you're set
+		calculateAndDisplayRoute(directionsService,directionsDisplay, marker, dest);
         $scope.map = map;
         //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     };

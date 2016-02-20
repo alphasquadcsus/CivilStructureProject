@@ -52,40 +52,6 @@ function initMap() {
   setMarkers(map,type);
 }
 
-// Data for the markers consisting of a name, a LatLng and a zIndex for the
-// order in which these markers should display on top of each other.
-var steelSites = [
-  ['Guy West Bridge', -33.890542, 151.274856, 4],
-  ['Site 2', -33.923036, 151.259052, 5],
-  ['Site 3', -34.028249, 151.157507, 3],
-  ['Site 4', -33.80010128657071, 151.28747820854187, 2],
-  ['Site 5', -33.950198, 151.259302, 1]
-];
-
-var timberSites = [
-  ['Site 1', -33.890542, 151.274856, 4],
-  ['Site 2', -33.923036, 151.259052, 5],
-  ['Site 3', -34.028249, 151.157507, 3],
-  ['Site 4', -33.80010128657071, 151.28747820854187, 2],
-  ['Site 5', -33.950198, 151.259302, 1]
-];
-
-var concreteSites = [
-  ['Site 1', -33.890542, 151.274856, 4],
-  ['Site 2', -33.923036, 151.259052, 5],
-  ['Site 3', -34.028249, 151.157507, 3],
-  ['Site 4', -33.80010128657071, 151.28747820854187, 2],
-  ['Site 5', -33.950198, 151.259302, 1]
-];
-
-var lateralSites = [
-  ['Site 1', -33.890542, 151.274856, 4],
-  ['Site 2', -33.923036, 151.259052, 5],
-  ['Site 3', -34.028249, 151.157507, 3],
-  ['Site 4', -33.80010128657071, 151.28747820854187, 2],
-  ['Site 5', -33.950198, 151.259302, 1]
-];
-
 function setMarkers(map,type) {
   // Adds markers to the map based on type 'steel','timber','concrete','lateral', 'connections', and 'all'
 

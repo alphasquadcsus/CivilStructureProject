@@ -2,14 +2,14 @@
     <ion-nav-buttons side="left"></ion-nav-buttons>
     <ion-content>
         <div id="startTour" class="col text-center">
-            <button class="button icon-left ion-navigate button-custom" ui-sref="app.mapview">Start the Tour</button>
+            <button class="button icon-left ion-navigate button-custom" ng-click="setTourMarkers('timbertours')" ui-sref="app.tabs.mapview">Start the Tour</button>
         </div>
         <div class="list">
             <div class="item item-divider"> Detailed sites </div>
-            <a class="item item-avatar" ng-repeat="timertour in timertours" href="#/app/tabs/tours/{{timbertour.idno}}">
-                <img src="{{timertour.icon}}" />
-                <h2>{{timertour.title}}</h2>
-                <p>{{timertour.rating}}</p>
+            <a class="item item-avatar" ng-repeat="timbertour in timbertours" href="#/app/tabs/tours/{{timbertour.idno}}">
+                <img src="{{timbertour.icon}}" />
+                <h2>{{timbertour.title}}</h2>
+                <p>{{timbertour.rating}}</p>
             </a>
         </div>
     </ion-content>

@@ -85,7 +85,7 @@ angular.module('app.controllers', ['ionic'])
         });
     };
 
-    $scope.zoomMin = 1;
+    //$scope.zoomMin = 16;
 
     $scope.showImages = function (index) {
         $scope.activeSlide = index;
@@ -278,18 +278,25 @@ angular.module('app.controllers', ['ionic'])
                 infoWindow.setContent(this.info);
                 infoWindow.open(map, this);
             });
+
+        }
+
+    };
+
 			/////////////
-function find_closest_marker( marker, tourmarkers ) {    
+var closest = function (marker, tourmarkersList) {    
     var pi = Math.PI;
     var R = 6371; //equatorial radius
     var distances = [];
+    var tourmarkers = tourmarkersList;
     var closest = -1;
 	var lat1 = marker.position.lat();
 	var lon1 = marker.position.lng();
 
     for( i=0;i<tourmarkers.length; i++ ) {  
-        var lat2 = tourmarkers[i].position.lat();
-        var lon2 = tourmarkers[i].position.lng();
+        var current = new google.maps.LatLng(tourmarkers[i].lat, tourmarkers[i].lon);
+        var lat2 = current.lat();
+        var lon2 = current.lng();
 
         var chLat = lat2-lat1;
         var chLon = lon2-lon1;
@@ -300,8 +307,7 @@ function find_closest_marker( marker, tourmarkers ) {
         var rLat1 = lat1*(pi/180);
         var rLat2 = lat2*(pi/180);
 
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
-                    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(rLat1) * Math.cos(rLat2); 
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(rLat1) * Math.cos(rLat2); 
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         var d = R * c;
 
@@ -313,21 +319,14 @@ function find_closest_marker( marker, tourmarkers ) {
 
     // (debug) The closest marker is:
     return (tourmarkers[closest]);
-}
-			/////////////////////////////////////////////////////////
-
-        }
-
-    };
-
-
+};
     var myLatlng = new google.maps.LatLng(38.5602, -121.4241);
 
     var mapOptions = {
         center: myLatlng,
         zoom: 18,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        zoomControl: true,
+        zoomControl: false,
         disableDefaultUI: true
     };
 
@@ -343,11 +342,14 @@ function find_closest_marker( marker, tourmarkers ) {
 	var directionsService = new google.maps.DirectionsService;
 	
 	
-function calculateAndDisplayRoute(directionsService, directionsDisplay, marker, dest) {
-	directionsService.route({
+var calculateAndDisplayRoute = function(directionsService, directionsDisplay, marker, dest) {
+	var lat = dest.lat;
+    var lon = dest.lng;
+    directionsService.route({
 		//origin: {lat:38.53, lng: -121.41555},
 		origin: marker.position,
-		destination: {lat:38.562605, lng: -121.419683},
+		//destination: {lat:38.558961, lng: -121.423011},
+        destination: {lat:lat, lng:lon},
 		//destination: dest.position,
 		travelMode: google.maps.TravelMode.WALKING
 	}, function(response,status) {
@@ -357,7 +359,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, marker, 
 			window.alert('Directions request failed due to ' + status);
 		}
 	});
-}
+};
 	
 	
 	////////////////////////
@@ -367,7 +369,8 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, marker, 
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		directionsDisplay.setMap(map);
 		var dest = new google.maps.Marker({});
-		//dest = find_closest_marker(marker, tourmarkers);  // if you can get this line to work without commenting it out then you're set
+        //dest.setPosition(38.558961,-121.423011);
+		//dest.setPosition((closest(marker, $scope.tourmarkers)).position);  // if you can get this line to work without commenting it out then you're set
 		calculateAndDisplayRoute(directionsService,directionsDisplay, marker, dest);
         $scope.map = map;
         //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));

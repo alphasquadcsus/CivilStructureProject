@@ -8,7 +8,8 @@ var QuizSchema = new Schema({
         {
             question: String,
 			options: [String],
-			answer: Number
+			answer: Number,
+            hint : String
         }
     
 });

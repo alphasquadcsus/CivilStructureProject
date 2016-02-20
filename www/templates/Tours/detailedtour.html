@@ -17,10 +17,10 @@
 
             <div class="row icon-row">
                 <div class="col text-center">
-                    <a button class="button button-large button-dark" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
+                    <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
                 </div>
                 <div class="col text-center">
-                    <button class="button button-large button-dark" ui-sref="app.mapview">View on map</button>
+                    <button class="button button-large button-custom" ui-sref="app.mapview">View on map</button>
                 </div>
             </div>
 
@@ -36,7 +36,11 @@
         </div>
 
         <div class="col text-center">
-            <button class="button button-large button-dark" ng-click="showPopup()">Rate this site</button>
+            <button class="button button-large button-custom" ng-disabled="{{buttonDisable}}" ng-click="showPopup()">Rate this site</button>
         </div>
+
+        <button class="button button-full button-positive" ng-click="showtechnicalModal()">
+            View technical information
+        </button>
     </ion-content>
 </ion-view>

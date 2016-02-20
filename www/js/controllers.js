@@ -31,10 +31,15 @@ angular.module('app.controllers', ['ionic'])
         $scope.concretetours = data;
     });
 
+    $scope.tours = {
+        name: "none"
+    };
+
     $scope.setTourMarkers = function (tourtype) {
         tourmarkers.setTourMarkers(tourtype);
     };
-    
+
+
 }])
 
 .controller('steeltoursCtrl', ['$scope', 'steeltours', function ($scope, tours) {
@@ -61,15 +66,27 @@ angular.module('app.controllers', ['ionic'])
     });
 }])
 
-.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', function ($scope, tours, $location, $ionicPopup, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
 
     tours.getTour($location.path().split("/")[4]).success(function (data) {
         $scope.tours = data;
     });
 
+    $scope.$on('$locationChangeStart', function () {
+        //$scope.technicalmodal.hide();
+        //$scope.technicalmodal.remove();
+        //$scope.modal.hide();
+        //$scope.modal.remove();
+        $scope.closeModal();
+        $scope.closetechnicalModal();
+
+    });
+
+
     $scope.showPopup = function () {
+        $scope.buttonDisable = false;
         $ionicPopup.show({
-            title: 'Rate the site',
+            title: 'Rate this tour site',
             template: '<div class="item range range-balanced"> <i class="icon ion-sad-outline"></i><input type="range" name="rating" min="0" max="5" value="5"><i class="icon ion-happy-outline"></i></div>',
             buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
                 text: 'Cancel',
@@ -85,14 +102,14 @@ angular.module('app.controllers', ['ionic'])
         });
     };
 
-    //$scope.zoomMin = 16;
+    $scope.zoomMin = 1;
 
     $scope.showImages = function (index) {
         $scope.activeSlide = index;
-        $scope.showModal('templates/Tours/gallery-zoomview.html');
+        $scope.showpictureModal('templates/Tours/gallery-zoomview.html');
     };
 
-    $scope.showModal = function (templateUrl) {
+    $scope.showpictureModal = function (templateUrl) {
         $ionicModal.fromTemplateUrl(templateUrl, {
             scope: $scope
         }).then(function (modal) {
@@ -101,9 +118,23 @@ angular.module('app.controllers', ['ionic'])
         });
     };
 
+    $scope.showtechnicalModal = function () {
+        $ionicModal.fromTemplateUrl('templates/Tours/technicalinfo.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.technicalmodal = modal;
+            $scope.technicalmodal.show();
+        });
+    };
+
     $scope.closeModal = function () {
         $scope.modal.hide();
         $scope.modal.remove();
+    };
+    
+    $scope.closetechnicalModal = function () {
+        $scope.technicalmodal.hide();
+        $scope.technicalmodal.remove();
     };
 
     $scope.updateSlideStatus = function (slide) {
@@ -116,18 +147,27 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.controller('detailedquizCtrl', ['$scope', '$http', '$location', 'quiz', function ($scope, $http, $location, quiz) {
-
+.controller('detailedquizCtrl', ['$scope', '$http', '$location', 'quiz', '$ionicPopup', function ($scope, $http, $location, quiz, $ionicPopup) {
+    $scope.foundquestions = false;
     quiz.getQuiz($location.path().split("/")[4]).success(function (data) {
         $scope.questions = data[0].questions;
+        $scope.foundquestions = true;
     });
 
     $scope.start = function () {
-        $scope.id = 0;
-        $scope.quizOver = false;
-        $scope.inProgress = true;
-        $scope.score = 0;
-        $scope.getQuestion();
+        if ($scope.foundquestions) {
+            $scope.id = 0;
+            $scope.quizOver = false;
+            $scope.inProgress = true;
+            $scope.score = 0;
+            $scope.numberofquestions = 0;
+            $scope.getQuestion();
+        } else {
+            $ionicPopup.alert({
+                title: 'This tour site has no quiz questions!'
+            });
+
+        }
     };
 
     $scope.reset = function () {
@@ -144,6 +184,7 @@ angular.module('app.controllers', ['ionic'])
             console.log(q);
             $scope.options = q.options;
             $scope.answer = q.answer;
+            $scope.hint = q.hint;
             $scope.answerMode = true;
         } else {
             $scope.quizOver = true;
@@ -151,8 +192,7 @@ angular.module('app.controllers', ['ionic'])
     };
 
     $scope.checkAnswer = function (option, index) {
-        //if (!$('input[name=answer]:checked').length) return;
-        //var ans = $('input[name=answer]:checked').val();
+
         var ans = option;
         if (ans == $scope.options[$scope.answer]) {
             $scope.score++;
@@ -166,6 +206,7 @@ angular.module('app.controllers', ['ionic'])
     $scope.nextQuestion = function () {
         $scope.id++;
         $scope.getQuestion();
+        $scope.numberofquestions++;
     };
 
 }])
@@ -225,6 +266,7 @@ angular.module('app.controllers', ['ionic'])
 
 .controller('premapCtrl', function ($scope, tourmarkers) {
 
+
     $scope.tours = {
         name: "none"
     };
@@ -272,13 +314,11 @@ angular.module('app.controllers', ['ionic'])
                 map: map,
                 info: content
             });
-			
-            //SCOPE: 'this' refers to the current markers object, we pass in the info and marker
+            //SCOPE: 'this' refers to the current 'markers' object, we pass in the info and marker
             google.maps.event.addListener(markers, 'click', function () {
                 infoWindow.setContent(this.info);
                 infoWindow.open(map, this);
             });
-
         }
 
     };
@@ -320,13 +360,14 @@ var closest = function (marker, tourmarkersList) {
     // (debug) The closest marker is:
     return (tourmarkers[closest]);
 };
+
     var myLatlng = new google.maps.LatLng(38.5602, -121.4241);
 
     var mapOptions = {
         center: myLatlng,
         zoom: 18,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        zoomControl: false,
+        zoomControl: true,
         disableDefaultUI: true
     };
 
@@ -337,7 +378,8 @@ var closest = function (marker, tourmarkersList) {
         map: map,
         title: 'Sac State'
     });
-////////////Directions Display/////////////////
+
+	////////////Directions Display/////////////////
 	var directionsDisplay = new google.maps.DirectionsRenderer;
 	var directionsService = new google.maps.DirectionsService;
 	
@@ -363,7 +405,7 @@ var calculateAndDisplayRoute = function(directionsService, directionsDisplay, ma
 	
 	
 	////////////////////////
-
+	
     var onSuccess = function (position) {
 
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));

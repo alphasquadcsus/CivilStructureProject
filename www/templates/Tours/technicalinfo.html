@@ -1,7 +1,7 @@
-<div class="modal" ng-controller="quizloginCtrl">
+<div class="modal">
     <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Register</h1>
-        <button class="button button-clear button-primary" ng-click="modal.close()">Skip</button>
+        <h1 class="title">Advanced Technical Information</h1>
+        <button class="button button-clear icon ion-close" ng-click="closetechnicalModal()"></button>
     </ion-header-bar>
 
     <ion-view hide-nav-bar="true">
@@ -15,15 +15,10 @@
                     <input type="text" placeholder="Student ID" ng-model="user.studentID">
                 </label>
 
-                <button class="button button-block button-stable" ng-click="register()">
-                    Sign Up
+                <button class="button button-block button-stable" ng-click="closetechnicalModal()">
+                    Ok
                 </button>
-                
-            <div style="text-align: center; margin: 25px 0;">or</div>
 
-            <a class="button button-block button-stable button-light-border" ng-click="showLogin()">
-                Already registered?&nbsp;&nbsp;Log In&nbsp;<i class="icon-arrow-right"></i>
-            </a>
             </div>
 
         </ion-content>

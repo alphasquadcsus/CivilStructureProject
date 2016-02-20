@@ -8,26 +8,45 @@
             Choose Tour Type
         </div>
 
-        <ul class="list" id="options">
-            <ion-radio icon="ion-location" ng-model="tours.name" value="steeltours">
+        <div class="list" id="options">
+
+<!--            <ion-item id="steel" ng-click="setTourMarkers('steeltours')" ui-sref="app.tabs.mapview">
+                Steel
+            </ion-item>-->
+
+
+            <!--            <ion-item id="concrete" ui-sref="app.tabs.mapview" ng-click="setTourMarkers('concretetours')">Concrete</ion-item>
+                <ion-item id="timber">
+                    Timber
+                </ion-item>
+                <ion-item id="lateral">
+                    Lateral
+                </ion-item>
+                <ion-item id="connections">
+                    Connections
+                </ion-item>
+                <ion-item id="all">
+                    All
+                </ion-item>-->
+            <ion-radio id="steel" icon="ion-location" ng-model="tours.name" value="steeltours">
                 Steel
             </ion-radio>
-            <ion-radio icon="ion-location" ng-model="tours.name" value="concretetours">
+            <ion-radio id="concrete" icon="ion-location" ng-model="tours.name" value="concretetours">
                 Concrete
             </ion-radio>
-            <ion-radio icon="ion-location" ng-model="tours.name" value="timbertours">
+            <ion-radio id="timber" icon="ion-location" ng-model="tours.name" value="timbertours">
                 Timber
             </ion-radio>
-            <ion-radio icon="ion-location" ng-model="tours.name" value="lateraltours">
+            <ion-radio id="steel" icon="ion-location" ng-model="tours.name" value="lateraltours">
                 Lateral
             </ion-radio>
-            <ion-radio icon="ion-location" ng-model="tours.name" value="connectionstours">
+            <ion-radio id="concrete" icon="ion-location" ng-model="tours.name" value="connectionstours">
                 Connections
             </ion-radio>
-            <ion-radio icon="ion-location" ng-model="tours.name" value="tours">
+            <ion-radio id="timber" icon="ion-location" ng-model="tours.name" value="tours">
                 All
             </ion-radio>
-        </ul>
+        </div>
 
         <button class="button ion-map button-large button-custom col col-33 col-offset-33" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
             View Map

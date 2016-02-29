@@ -207,6 +207,36 @@ router.route('/tours/:tour_id')
     });
 });
 
+
+//Rate a tour
+router.route('/rate/:tour_id')
+    .put(function (req, res) {
+        Tour.find({
+            'idno': req.params.tour_id
+        }, ('ratings rating'), function (err, tour) {
+            if (err || req.body.ratings < 1 || req.body.ratings > 5) {
+                res.send(err);
+                return;
+            }
+            tour[0].ratings.push(req.body.ratings);
+            var result = 0;
+            for (var i = 0; i < tour[0].ratings.length; i++) {
+                result += tour[0].ratings[i];
+            }
+            tour[0].rating = result / tour[0].ratings.length;
+
+            tour[0].save(function (err) {
+                if (err)
+                    res.send(err);
+                res.json({
+                    message: 'Rating submitted!'
+                });
+
+            });
+        });
+    });
+
+
 // on routes that end in /quizzes/:quiz_id
 // ----------------------------------------------------
 router.route('/quizzes/:quiz_id')
@@ -218,7 +248,7 @@ router.route('/quizzes/:quiz_id')
     }, ('idno questions'), function (err, quiz) {
         if (err)
             res.send(err);
-        
+
         res.json(quiz);
     });
 });

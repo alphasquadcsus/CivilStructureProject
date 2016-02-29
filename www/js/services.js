@@ -64,6 +64,9 @@ angular.module('app.services', ['ionic'])
                      .success(function (data) {
                          console.log(data);
                          return data;*/
+        },
+        setRate: function (id) {
+            return $http.put('http://localhost:8080/api/rate/' + id);
         }
     };
     /*    return {

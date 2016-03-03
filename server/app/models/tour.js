@@ -6,6 +6,7 @@ var TourSchema = new Schema({
     idnum: Number,
     tourtype: String,
     title: String,
+    ratings: [Number],
     rating: Number,
     icon: String,
     lat: Number,
@@ -27,6 +28,5 @@ var TourSchema = new Schema({
         }
     ]
 });
-
 
 module.exports = mongoose.model('Tour', TourSchema);

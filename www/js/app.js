@@ -61,16 +61,6 @@
          }
      })
 
-     .state('app.news', {
-         url: "/news",
-         views: {
-             'menuContent': {
-                 templateUrl: "templates/Menu/news.html",
-                 controller: 'newsCtrl'
-             }
-         }
-     })
-
      .state('app.tabs.mapview', {
          url: '/map/tourmap',
          views: {

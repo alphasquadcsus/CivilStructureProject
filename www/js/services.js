@@ -5,6 +5,7 @@ angular.module('app.services', ['ionic'])
 //They are used when listing the tours in the tour page, and listing the available quizzes in the quiz page.
 
 .factory('concretetours', ['$http', function ($http) {
+    //return $http.get('https://civilappcsus.herokuapp.com/api/concretetours')
     return $http.get('http://localhost:8080/api/concretetours')
         .success(function (data) {
             return data;
@@ -15,6 +16,7 @@ angular.module('app.services', ['ionic'])
 }])
 
 .factory('steeltours', ['$http', function ($http) {
+    //return $http.get('https://civilappcsus.herokuapp.com/api/steeltours')
     return $http.get('http://localhost:8080/api/steeltours')
         .success(function (data) {
             return data;
@@ -25,6 +27,7 @@ angular.module('app.services', ['ionic'])
 }])
 
 .factory('lateraltours', ['$http', function ($http) {
+    //return $http.get('https://civilappcsus.herokuapp.com/api/lateraltours')
     return $http.get('http://localhost:8080/api/lateraltours')
         .success(function (data) {
             return data;
@@ -35,6 +38,7 @@ angular.module('app.services', ['ionic'])
 }])
 
 .factory('timbertours', ['$http', function ($http) {
+    //return $http.get('https://civilappcsus.herokuapp.com/api/timbertours')
     return $http.get('http://localhost:8080/api/timbertours')
         .success(function (data) {
             return data;
@@ -45,6 +49,7 @@ angular.module('app.services', ['ionic'])
 }])
 
 .factory('connectionstours', ['$http', function ($http) {
+    //return $http.get('https://civilappcsus.herokuapp.com/api/connectionstours')
     return $http.get('http://localhost:8080/api/connectionstours')
         .success(function (data) {
             return data;
@@ -59,23 +64,27 @@ angular.module('app.services', ['ionic'])
 
     return {
         getTour: function (id) {
-            return $http.get('http://localhost:8080/api/tours/' + id);
-            /*     $http.get('http://localhost:8080/api/tours/' + id)
-                     .success(function (data) {
-                         console.log(data);
-                         return data;*/
+            //return $http.get('https://civilappcsus.herokuapp.com/api/tours/' + id);
+            return $http.get('http://localhost:8080/api/tours/' + id)
+                .success(function (data) {
+                    return data;
+                })
+                .error(function (data) {
+                    return data;
+                });
         },
         setRate: function (id) {
-            return $http.put('http://localhost:8080/api/rate/' + id);
+            //return $http.put('https://civilappcsus.herokuapp.com/api/rate/' + id);
+            return $http.put('http://localhost:8080/api/rate/' + id)
+                .success(function (data) {
+                    return data;
+                })
+                .error(function (data) {
+                    return data;
+                });
         }
     };
-    /*    return {
-          getTour: function(id) {
-              $http.get('http://localhost:8080/api/tours/' + id).then(function(data) {
-                return data;
-            });
-          }
-        };*/
+    
 }])
 
 //********************************************* <//Tour Services> *********************************************\\
@@ -87,6 +96,7 @@ angular.module('app.services', ['ionic'])
 .factory('quiz', ['$http', function ($http) {
 
     var getQuiz = function (id) {
+        //var questions = $http.get('https://civilappcsus.herokuapp.com/api/quizzes/' + id);
         var questions = $http.get('http://localhost:8080/api/quizzes/' + id);
         return questions;
     };
@@ -94,10 +104,8 @@ angular.module('app.services', ['ionic'])
     var getQuestion = function (questions, id) {
         console.log(questions);
         if (id < questions.length) {
-            console.log("Question found");
             return questions[id];
         } else {
-            console.log("No question found");
             return false;
         }
     };
@@ -120,15 +128,13 @@ angular.module('app.services', ['ionic'])
     var type;
 
     var getTourMarkers = function () {
+        //var markers = $http.get('https://civilappcsus.herokuapp.com/api/' + this.type);
         var markers = $http.get('http://localhost:8080/api/' + this.type);
-        console.log("returning tours");
         return markers;
     };
 
     var setTourMarkers = function (type) {
         this.type = type;
-        console.log("setting tours");
-        console.log(this.type);
     };
 
     return {

@@ -68,9 +68,11 @@ angular.module('app.controllers', ['ionic'])
 
 .controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
 
+    $scope.rating = {};
+    $scope.rating.number = 5;
+
     tours.getTour($location.path().split("/")[4]).success(function (data) {
         $scope.tours = data;
-        console.log(data);
     });
 
     $scope.$on('$locationChangeStart', function () {
@@ -83,24 +85,30 @@ angular.module('app.controllers', ['ionic'])
 
     });
 
+    $scope.setRating = function (value) {
+        $scope.rating.final = value;
+    };
 
     $scope.showPopup = function () {
-        $scope.buttonDisable = false;
+
+        //$scope.buttonDisable = false;
         $ionicPopup.show({
             title: 'Rate this tour site',
-            template: '<div class="item range range-balanced"> <i class="icon ion-sad-outline"></i><input type="range" name="rating" min="0" max="5" value="5"><i class="icon ion-happy-outline"></i></div>',
+            template: '<div ng-controller="detailedtourCtrl" class="range range-balanced"> 1 <i class="icon ion-sad-outline"></i><input type="range" name="ratings" min="0" max="5" value="{{rating.number}}" ng-model="rating.number" ng-change="setRating({{rating.number}})">5{{rating.number}}<i class="icon ion-happy-outline"></i></div>',
+            //template: "<ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>",
             buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
                 text: 'Cancel',
                 type: 'button-default',
   }, {
                 text: 'OK',
                 type: 'button-positive',
-                onTap: function (e) {
+                onTap: function () {
+                    console.log($scope.rating.final);
                     // Returning a value will cause the promise to resolve with the given value.
                     //return scope.data.response;
                     tours.setRate($location.path().split("/")[4]).success(function (data) {
                         $scope.tours = data;
-                        console.log(data);
+                        //console.log(data);
                     });
                 }
   }]
@@ -186,7 +194,6 @@ angular.module('app.controllers', ['ionic'])
         var q = quiz.getQuestion($scope.questions, $scope.id);
         if (q) {
             $scope.question = q.question;
-            console.log(q);
             $scope.options = q.options;
             $scope.answer = q.answer;
             $scope.hint = q.hint;
@@ -215,15 +222,6 @@ angular.module('app.controllers', ['ionic'])
     };
 
 }])
-
-.controller('newsCtrl', function ($scope, $http) {
-    $http.get('http://localhost:8080/api/news').then(function (result) {
-        console.log('Success', result);
-        $scope.news = result.data;
-    }, function (err) {
-        console.error('ERR', err);
-    });
-})
 
 /*.controller('quizzesCtrl', function ($scope, $ionicSideMenuDelegate, $ionicModal) {
 
@@ -288,7 +286,6 @@ angular.module('app.controllers', ['ionic'])
     $scope.getTourMarkers = function () {
         tourmarkers.getTourMarkers().success(function (data) {
             $scope.tourmarkers = data;
-            console.log($scope.tourmarkers);
             drawMarkers();
         });
     };

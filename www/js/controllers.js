@@ -289,7 +289,7 @@ angular.module('app.controllers', ['ionic'])
     };
     
     ///////////////////Directions Display//////////////////////
-	var directionsDisplay = new google.maps.DirectionsRenderer;
+	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});;
 	var directionsService = new google.maps.DirectionsService;
 	
 
@@ -385,25 +385,20 @@ angular.module('app.controllers', ['ionic'])
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 	
 	var marker = new google.maps.Marker({
+		label: "C",
         position: myLatlng,
         map: map,
         title: 'SAC STATE'
     });
 
-    /*
-	var dest = new google.maps.Marker({ 
-        position: NAPA_HALL_LAT_LNG,
-        map: map,
-        title: 'NAPA HALL'
-    });
-	*/
 	
 	
     var onSuccess = function (position) {
 
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		directionsDisplay.setMap(map);
+		//directionsDisplay.setMap(map);
         $scope.map = map;
+		//drawMarkers(directionsService, directionsDisplay, marker);
         //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     };
 
@@ -413,22 +408,23 @@ angular.module('app.controllers', ['ionic'])
     }
 
     navigator.geolocation.watchPosition(onSuccess, onError, {
-        maximumAge: 3000,
-        timeout: 5000,
+        maximumAge: 3000,   
+        timeout: 5000,    
         enableHighAccuracy: true
     });
 
 
-///////This new onSuccessDrawMarker and watchPosition refreshes drawMarkers at a slower time to prevent query timeout     
+///////This new onSuccessDrawMarker and watchPosition refreshes drawMarkers at a slower time to prevent query timeout    
     var onSuccessDrawMarker = function (position) {
+        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		directionsDisplay.setMap(map);
-		drawMarkers(directionsService,directionsDisplay, marker);
         $scope.map = map;
+		drawMarkers(directionsService, directionsDisplay, marker);
     };
 	
 	navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
-		maximumAge: 9000,
-        timeout: 15000,
+		maximumAge: 500000,
+        timeout: 800000,
         enableHighAccuracy: true
 	});
 

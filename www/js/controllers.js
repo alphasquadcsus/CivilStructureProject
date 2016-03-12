@@ -288,6 +288,18 @@ angular.module('app.controllers', ['ionic'])
         });
     };
     
+    var currentStop = 0;
+    
+    $scope.nextStop = function () {
+        currentStop++;
+        console.log("moving forward" + currentStop);
+    }
+    
+    $scope.prevStop = function () {
+        currentStop--;
+        console.log("moving back" + currentStop);
+    }
+    
     ///////////////////Directions Display//////////////////////
 	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});;
 	var directionsService = new google.maps.DirectionsService;

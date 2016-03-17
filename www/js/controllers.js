@@ -292,16 +292,24 @@ angular.module('app.controllers', ['ionic'])
     
     $scope.nextStop = function () {
         currentStop++;
+        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		directionsDisplay.setMap(map);
+        $scope.map = map;
+		drawMarkers(directionsService, directionsDisplay, marker);
         console.log("moving forward" + currentStop);
     }
     
     $scope.prevStop = function () {
         currentStop--;
+        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		directionsDisplay.setMap(map);
+        $scope.map = map;
+		drawMarkers(directionsService, directionsDisplay, marker);
         console.log("moving back" + currentStop);
     }
     
     ///////////////////Directions Display//////////////////////
-	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});;
+	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	var directionsService = new google.maps.DirectionsService;
 	
 
@@ -317,6 +325,7 @@ angular.module('app.controllers', ['ionic'])
         var lng = marker.position.lng();
         var R = 6371; 							// radius of earth in km
 		var distances = [];
+        var distancesCopy = [];
 		var shortest = -1;
                 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
@@ -341,15 +350,33 @@ angular.module('app.controllers', ['ionic'])
 			var d = R * c;
 			
 			distances[i] = d;
-			if ( shortest == -1 || d < distances[shortest] ) {
-				shortest = i;
+            distancesCopy[i] = d;
+            
+			distances.sort();
+            
+            
+            var stopKey = distancesCopy.indexOf(distances[currentStop]);
+            
+            
 				
-				var dest_point_lat = ($scope.tourmarkers[i].lat);
-				var dest_point_lon = ($scope.tourmarkers[i].lon);
-				dest_end = new google.maps.LatLng(dest_point_lat, dest_point_lon);
-				//console.log(dest_end);
-
-				/////**directions feature should have the closest marker be the desitination//
+            markers = new google.maps.Marker({
+                label: "S",
+                animation: google.maps.Animation.DROP,
+                position: point,
+                map: map,
+                info: content
+			});
+			
+            //SCOPE: 'this' refers to the current 'markers' object, we pass in the info and marker
+            google.maps.event.addListener(markers, 'click', function () {
+                infoWindow.setContent(this.info);
+                infoWindow.open(map, this);
+            });	
+        }
+		    var dest_point_lat = ($scope.tourmarkers[stopKey].lat);
+			var dest_point_lon = ($scope.tourmarkers[stopKey].lon);
+			var dest_end = new google.maps.LatLng(dest_point_lat, dest_point_lon);
+			/////**directions feature should have the closest marker be the desitination//
 				directionsService.route({
 					origin: marker.position,  
 				destination: dest_end,               // i think the marker that should in here is shortest.
@@ -360,26 +387,8 @@ angular.module('app.controllers', ['ionic'])
 					} else {
 						window.alert('Directions request failed due to ' + status);
 					}
-				});				
-					
-			}
-            
-            markers = new google.maps.Marker({
-                label: "S",
-                animation: google.maps.Animation.DROP,
-                position: point,
-                map: map,
-                info: content
-        });
-			
-            //SCOPE: 'this' refers to the current 'markers' object, we pass in the info and marker
-            google.maps.event.addListener(markers, 'click', function () {
-                infoWindow.setContent(this.info);
-                infoWindow.open(map, this);
-            });
-        }
-        //directionsDisplay.setMap(map);
-        //$scope.map = map;
+				});
+				
 	};
 
 

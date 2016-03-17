@@ -285,16 +285,27 @@ angular.module('app.controllers', ['ionic'])
             $scope.tourmarkers = data;
             console.log($scope.tourmarkers);
             drawMarkers();
-			//closest();
         });
     };
     
-    	///////////////////Directions Display//////////////////////
-	var directionsDisplay = new google.maps.DirectionsRenderer;
+    var currentStop = 0;
+    
+    $scope.nextStop = function () {
+        currentStop++;
+        console.log("moving forward" + currentStop);
+    }
+    
+    $scope.prevStop = function () {
+        currentStop--;
+        console.log("moving back" + currentStop);
+    }
+    
+    ///////////////////Directions Display//////////////////////
+	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});;
 	var directionsService = new google.maps.DirectionsService;
 	
 
-    var drawMarkers = function (directionsService, directionsDisplay, marker, dest) {
+    var drawMarkers = function (directionsService, directionsDisplay, marker) {
 
         var markers;
         var content;
@@ -302,13 +313,11 @@ angular.module('app.controllers', ['ionic'])
 
         function rad(x) {return x*Math.PI/180;}
 		
-			//var event;
         var lat = marker.position.lat();
         var lng = marker.position.lng();
         var R = 6371; 							// radius of earth in km
 		var distances = [];
 		var shortest = -1;
-        console.log("hey I made it here");
                 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
             content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
@@ -323,21 +332,38 @@ angular.module('app.controllers', ['ionic'])
 
             var point = new google.maps.LatLng($scope.tourmarkers[i].lat, $scope.tourmarkers[i].lon);
             
-            var mlat = point.lat();           //location makes mlat and mlong redundant
+            var mlat = point.lat();      
 			var mlng = point.lng();
-            console.log(mlat);
-            console.log(mlng);
             var dLat  = rad(mlat - lat);
 			var dLong = rad(mlng - lng);
 			var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong/2) * Math.sin(dLong/2);
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 			var d = R * c;
+			
 			distances[i] = d;
 			if ( shortest == -1 || d < distances[shortest] ) {
 				shortest = i;
-			}
+				
+				var dest_point_lat = ($scope.tourmarkers[i].lat);
+				var dest_point_lon = ($scope.tourmarkers[i].lon);
+				dest_end = new google.maps.LatLng(dest_point_lat, dest_point_lon);
+				//console.log(dest_end);
 
-		//alert(map.markers[shortest].title);
+				/////**directions feature should have the closest marker be the desitination//
+				directionsService.route({
+					origin: marker.position,  
+				destination: dest_end,               // i think the marker that should in here is shortest.
+					travelMode: google.maps.TravelMode.WALKING
+				}, function(response,status) {
+					if(status==google.maps.DirectionsStatus.OK) {
+						directionsDisplay.setDirections(response);
+					} else {
+						window.alert('Directions request failed due to ' + status);
+					}
+				});				
+					
+			}
+            
             markers = new google.maps.Marker({
                 label: "S",
                 animation: google.maps.Animation.DROP,
@@ -352,20 +378,8 @@ angular.module('app.controllers', ['ionic'])
                 infoWindow.open(map, this);
             });
         }
-        
-        
-		/////**directions feature should have the closest marker be the desitination//
-		directionsService.route({
-			origin: marker.position,  
-			destination: $scope.tourmarkers[shortest].position,               // i think the marker that should in here is shortest.
-			travelMode: google.maps.TravelMode.WALKING
-		}, function(response,status) {
-			if(status==google.maps.DirectionsStatus.OK) {
-				directionsDisplay.setDirections(response);
-			} else {
-				window.alert('Directions request failed due to ' + status);
-			}
-		});
+        //directionsDisplay.setMap(map);
+        //$scope.map = map;
 	};
 
 
@@ -383,77 +397,20 @@ angular.module('app.controllers', ['ionic'])
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 	
 	var marker = new google.maps.Marker({
+		label: "C",
         position: myLatlng,
         map: map,
         title: 'SAC STATE'
     });
 
-    var dest = new google.maps.Marker({
-        position: NAPA_HALL_LAT_LNG,
-        map: map,
-        title: 'NAPA HALL'
-    });
 	
-	
-
-	//////////////////////////////////////////////////////////////////////////////////////////
-	//Goal of this function is to find closest marker to current location
-	//then to create directions to that marker.
-	//should be refreshed everytime in the onSuccess function
-/*	var closest = function (directionsService, directionsDisplay, marker) {
-			
-		function rad(x) {return x*Math.PI/180;}
-		
-			//var event;
-			var lat = marker.position.lat();
-			var lng = marker.position.lng();
-			var R = 6371; 							// radius of earth in km
-			var distances = [];
-			var shortest = -1;
-            var list = $scope.tourmarkers;
-        
-			
-			for(var i = 0; i < list.length; i++) {
-            //var location = new google.maps.LatLng($scope.tourmarkers[i].lat, $scope.tourmarkers[i].lon);  //same as point in draw function
-			var mlat = $scope.tourmarkers[i].position.lat();           //location makes mlat and mlong redundant
-			var mlng = $scope.tourmarkers[i].position.lng();
-            //var clat = $scope.marker.position.lat();
-            //var clng = $scope.marker.position.lng();
-			var dLat  = rad(mlat - lat);
-			var dLong = rad(mlng - lng);
-			var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat)) * Math.cos(rad(lat)) * Math.sin(dLong/2) * Math.sin(dLong/2);
-			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-			var d = R * c;
-			distances[i] = d;
-			if ( shortest == -1 || d < distances[shortest] ) {
-				shortest = i;
-			}
-
-		//alert(map.markers[shortest].title);
-	   }		
-		/////**directions feature should have the closest marker be the desitination//
-		directionsService.route({
-			origin: marker.position,  
-			destination: shortest.position,               // i think the marker that should in here is shortest.
-			travelMode: google.maps.TravelMode.WALKING
-		}, function(response,status) {
-			if(status==google.maps.DirectionsStatus.OK) {
-				directionsDisplay.setDirections(response);
-			} else {
-				window.alert('Directions request failed due to ' + status);
-			}
-		});
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////	*/
 	
     var onSuccess = function (position) {
 
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		directionsDisplay.setMap(map);
-        dest.setPosition(new google.maps.LatLng(38.553801, -121.4212745));
-		drawMarkers(directionsService,directionsDisplay, marker, dest);
-        //dest.setPosition(new google.maps.LatLng($scope.tourmarkers[shortest].position.coords.latitude, $scope.tourmarkers[shortest].position.coords.longitude));  // if you can get this line to work without commenting it out then you're set
+		//directionsDisplay.setMap(map);
         $scope.map = map;
+		//drawMarkers(directionsService, directionsDisplay, marker);
         //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     };
 
@@ -463,9 +420,24 @@ angular.module('app.controllers', ['ionic'])
     }
 
     navigator.geolocation.watchPosition(onSuccess, onError, {
-        maximumAge: 3000,
-        timeout: 5000,
+        maximumAge: 3000,   
+        timeout: 5000,    
         enableHighAccuracy: true
     });
+
+
+///////This new onSuccessDrawMarker and watchPosition refreshes drawMarkers at a slower time to prevent query timeout    
+    var onSuccessDrawMarker = function (position) {
+        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		directionsDisplay.setMap(map);
+        $scope.map = map;
+		drawMarkers(directionsService, directionsDisplay, marker);
+    };
+	
+	navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
+		maximumAge: 500000,
+        timeout: 800000,
+        enableHighAccuracy: true
+	});
 
 });

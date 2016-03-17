@@ -292,19 +292,18 @@ angular.module('app.controllers', ['ionic'])
     
     $scope.nextStop = function () {
         currentStop++;
-        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        /*marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		directionsDisplay.setMap(map);
         $scope.map = map;
-		drawMarkers(directionsService, directionsDisplay, marker);
+		drawMarkers(directionsService, directionsDisplay, marker);*/  
+        // above code will work if line below does not
+        onSuccessDrawMarker(position);
         console.log("moving forward" + currentStop);
     }
     
     $scope.prevStop = function () {
         currentStop--;
-        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		directionsDisplay.setMap(map);
-        $scope.map = map;
-		drawMarkers(directionsService, directionsDisplay, marker);
+        onSuccessDrawMarker(position);
         console.log("moving back" + currentStop);
     }
     
@@ -361,7 +360,6 @@ angular.module('app.controllers', ['ionic'])
 				
             markers = new google.maps.Marker({
                 label: "S",
-                animation: google.maps.Animation.DROP,
                 position: point,
                 map: map,
                 info: content
@@ -376,10 +374,10 @@ angular.module('app.controllers', ['ionic'])
 		    var dest_point_lat = ($scope.tourmarkers[stopKey].lat);
 			var dest_point_lon = ($scope.tourmarkers[stopKey].lon);
 			var dest_end = new google.maps.LatLng(dest_point_lat, dest_point_lon);
-			/////**directions feature should have the closest marker be the desitination//
+        
 				directionsService.route({
 					origin: marker.position,  
-				destination: dest_end,               // i think the marker that should in here is shortest.
+				destination: dest_end,               
 					travelMode: google.maps.TravelMode.WALKING
 				}, function(response,status) {
 					if(status==google.maps.DirectionsStatus.OK) {
@@ -393,7 +391,6 @@ angular.module('app.controllers', ['ionic'])
 
 
     var myLatlng = new google.maps.LatLng(38.5602, -121.4241);
-	var NAPA_HALL_LAT_LNG = new google.maps.LatLng(38.553801, -121.4212745); // just created this marker for testing purposes
 		
     var mapOptions = {
         center: myLatlng,
@@ -406,7 +403,7 @@ angular.module('app.controllers', ['ionic'])
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 	
 	var marker = new google.maps.Marker({
-		label: "C",
+		label: "*",
         position: myLatlng,
         map: map,
         title: 'SAC STATE'
@@ -415,12 +412,8 @@ angular.module('app.controllers', ['ionic'])
 	
 	
     var onSuccess = function (position) {
-
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		//directionsDisplay.setMap(map);
         $scope.map = map;
-		//drawMarkers(directionsService, directionsDisplay, marker);
-        //$scope.map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     };
 
     function onError(error) {
@@ -444,9 +437,7 @@ angular.module('app.controllers', ['ionic'])
     };
 	
 	navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
-		maximumAge: 500000,
-        timeout: 800000,
-        enableHighAccuracy: true
+		maximumAge: 5000,
+        enableHighAcuracy: true
 	});
-
 });

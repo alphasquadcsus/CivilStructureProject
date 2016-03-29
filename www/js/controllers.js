@@ -288,23 +288,23 @@ angular.module('app.controllers', ['ionic'])
         });
     };
     
-    var currentStop = 0;
+    $scope.currentStop=0;
     
     $scope.nextStop = function () {
-        currentStop++;
+        $scope.currentStop++;
         /*marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		directionsDisplay.setMap(map);
         $scope.map = map;
 		drawMarkers(directionsService, directionsDisplay, marker);*/  
         // above code will work if line below does not
         onSuccessDrawMarker(position);
-        console.log("moving forward" + currentStop);
+        console.log("moving forward" + $scope.currentStop);
     }
     
     $scope.prevStop = function () {
-        currentStop--;
+        $scope.currentStop--;
         onSuccessDrawMarker(position);
-        console.log("moving back" + currentStop);
+        console.log("moving back" + $scope.currentStop);
     }
     
     ///////////////////Directions Display//////////////////////
@@ -354,7 +354,7 @@ angular.module('app.controllers', ['ionic'])
 			distances.sort();
             
             
-            var stopKey = distancesCopy.indexOf(distances[currentStop]);
+            var stopKey = distancesCopy.indexOf(distances[$scope.currentStop]);
             
             
 				

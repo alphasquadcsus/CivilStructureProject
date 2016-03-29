@@ -290,6 +290,7 @@ angular.module('app.controllers', ['ionic'])
     
     var currentStop = 0;
     
+    
     $scope.nextStop = function () {
         currentStop++;
         console.log("moving forward" + currentStop);

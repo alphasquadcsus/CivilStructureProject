@@ -8,11 +8,36 @@ angular.module('app.controllers', ['ionic'])
 //$scope.$on('$ionicView.enter', function(e) {
 //});
 
-.controller('appCtrl', function ($scope, $ionicSideMenuDelegate) {
+.controller('appCtrl', ['$scope', 'auth', function ($scope, auth, $ionicSideMenuDelegate) {
+    $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.currentUser = auth.currentUser;
+    $scope.logOut = auth.logOut;
+
     $scope.toggleLeft = function () {
         $ionicSideMenuDelegate.toggleLeft();
     };
-})
+}])
+
+.controller('authCtrl', ['$scope', '$state', 'auth', function ($scope, $state, auth) {
+    $scope.user = {};
+    $scope.user.type = "student";
+
+    $scope.register = function () {
+        auth.register($scope.user).error(function (error) {
+            $scope.error = error;
+        }).then(function () {
+            $state.go('app.tabs.map');
+        });
+    };
+
+    $scope.logIn = function () {
+        auth.logIn($scope.user).error(function (error) {
+            $scope.error = error;
+        }).then(function () {
+            $state.go('app.tabs.map');
+        });
+    };
+}])
 
 .directive('hideTabs', function ($rootScope) {
     return {
@@ -30,16 +55,12 @@ angular.module('app.controllers', ['ionic'])
     tours.success(function (data) {
         $scope.concretetours = data;
     });
-
     $scope.tours = {
         name: "none"
     };
-
     $scope.setTourMarkers = function (tourtype) {
         tourmarkers.setTourMarkers(tourtype);
     };
-
-
 }])
 
 .controller('steeltoursCtrl', ['$scope', 'steeltours', function ($scope, tours) {
@@ -67,9 +88,8 @@ angular.module('app.controllers', ['ionic'])
 }])
 
 .controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
-
-    $scope.rating = {};
-    $scope.rating.number = 5;
+    $scope.data = {};
+    $scope.rated = false;
 
     tours.getTour($location.path().split("/")[4]).success(function (data) {
         $scope.tours = data;
@@ -85,34 +105,29 @@ angular.module('app.controllers', ['ionic'])
 
     });
 
-    $scope.setRating = function (value) {
-        $scope.rating.final = value;
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',
+        iconOff: 'ion-ios-star-outline',
+        iconOnColor: 'rgb(200, 200, 100)',
+        iconOffColor: 'rgb(33, 121, 37)',
+        rating: 0,
+        minRating: 1,
+        callback: function (rating) {
+            $scope.ratingsCallback(rating);
+        }
     };
 
-    $scope.showPopup = function () {
+    $scope.ratingsCallback = function (rating) {
+        $scope.data = {
+            ratings: rating
+        };
+    };
 
-        //$scope.buttonDisable = false;
-        $ionicPopup.show({
-            title: 'Rate this tour site',
-            template: '<div ng-controller="detailedtourCtrl" class="range range-balanced"> 1 <i class="icon ion-sad-outline"></i><input type="range" name="ratings" min="0" max="5" value="{{rating.number}}" ng-model="rating.number" ng-change="setRating({{rating.number}})">5{{rating.number}}<i class="icon ion-happy-outline"></i></div>',
-            //template: "<ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>",
-            buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                text: 'Cancel',
-                type: 'button-default',
-  }, {
-                text: 'OK',
-                type: 'button-positive',
-                onTap: function () {
-                    console.log($scope.rating.final);
-                    // Returning a value will cause the promise to resolve with the given value.
-                    //return scope.data.response;
-                    tours.setRate($location.path().split("/")[4]).success(function (data) {
-                        $scope.tours = data;
-                        //console.log(data);
-                    });
-                }
-  }]
+    $scope.submitRating = function () {
+        tours.setRate($location.path().split("/")[4], $scope.data).success(function () {
+            $scope.rated = true;
         });
+        $scope.rated = true;
     };
 
     $scope.zoomMin = 1;
@@ -189,8 +204,6 @@ angular.module('app.controllers', ['ionic'])
     };
 
     $scope.getQuestion = function () {
-        console.log("Getting Question:");
-        console.log($scope.id);
         var q = quiz.getQuestion($scope.questions, $scope.id);
         if (q) {
             $scope.question = q.question;
@@ -203,8 +216,7 @@ angular.module('app.controllers', ['ionic'])
         }
     };
 
-    $scope.checkAnswer = function (option, index) {
-
+    $scope.checkAnswer = function (option) {
         var ans = option;
         if (ans == $scope.options[$scope.answer]) {
             $scope.score++;
@@ -221,55 +233,22 @@ angular.module('app.controllers', ['ionic'])
         $scope.numberofquestions++;
     };
 
+    $scope.submitQuiz = function () {
+        $scope.data = {
+            quizId: $location.path().split("/")[4],
+            score: $scope.score,
+            total: $scope.numberofquestions
+        };
+        //console.log($scope.data);
+        quiz.submitQuiz($scope.data).success(function () {
+            //$scope.rated = true;
+            console.log("success");
+        });
+        //$scope.rated = true;
+    };
 }])
 
-/*.controller('quizzesCtrl', function ($scope, $ionicSideMenuDelegate, $ionicModal) {
-
-    $ionicModal.fromTemplateUrl('templates/Quizzes/quizregister.html', function (modal) {
-        $scope.modal = modal;
-    }, {
-        animation: 'slide-in-up'
-    });
-
-
-})*/
-
-/*.controller('quizloginCtrl', function ($scope, $ionicSideMenuDelegate, $ionicPopup) {
-
-    $scope.data = {};
-    $scope.showLogin = function () {
-        var myPopup = $ionicPopup.show({
-            template: '<input type="password" ng-model="data.wifi">',
-            title: 'Login',
-            subTitle: 'Please enter Sac State Student ID',
-            scope: $scope,
-            buttons: [
-                {
-                    text: 'Cancel'
-                },
-                {
-                    text: '<b>Login</b>',
-                    type: 'button-positive',
-                    onTap: function (e) {
-                        if (!$scope.data.wifi) {
-                            //don't allow the user to close unless he enters Student ID
-                            e.preventDefault();
-                        } else {
-                            return $scope.data.wifi;
-                        }
-                    }
-      }
-    ]
-        });
-        myPopup.then(function (res) {
-            console.log('Tapped!', res);
-        });
-    };
-})*/
-
 .controller('premapCtrl', function ($scope, tourmarkers) {
-
-
     $scope.tours = {
         name: "none"
     };

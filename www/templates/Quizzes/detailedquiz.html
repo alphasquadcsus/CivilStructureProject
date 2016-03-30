@@ -1,34 +1,22 @@
 <ion-view title="Quiz">
-    <ion-nav-buttons side="left"> </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+    </ion-nav-buttons>
     <ion-content>
-
         <div class="quiz-area" ng-show="inProgress">
             <div ng-show="!quizOver">
-
                 <ion-item id="question" class="item-text-wrap">
                     {{question}}
                 </ion-item>
-
                 <ul class="list" id="options">
                     <ion-radio id="option" ng-repeat="option in options" value="{{option}}" ng-model="options.option" name="{{question}}">
                         {{option}}
                     </ion-radio>
                 </ul>
-
-<!--<div class="item item-divider">
-    Selected Answer: {{options.option}}
-</div>
-<div class="item item-divider">
-    Correct Answer: {{answer}}
-</div>-->
-
                 <button class="button button-large button-custom col col-33 col-offset-33" ng-click="checkAnswer(options.option, question.qID)" ng-show="answerMode">
                     Submit
                 </button>
-
                 <div ng-show="!answerMode">
                     <button class="button button-large button-custom col col-33 col-offset-33" ng-click="nextQuestion()">Next</button>
-
                     <div class="card">
                         <div class="item item-text-wrap">
                             <span ng-show="correctAns"><center id="correctanswer">That is correct!</center></span>
@@ -36,29 +24,23 @@
                             <br>
                             <center id="hint">Hint: {{hint}}</center>
                             </span>
-
                         </div>
                     </div>
-
                 </div>
             </div>
-
-
             <div id="score" class="bar bar-positive">
                 <h1 class="title">Questions correct: {{score}} out of {{numberofquestions}}</h1>
             </div>
-
             <div ng-show="quizOver">
                 <h2>Quiz is over</h2>
                 <img src="img/quizend.png" style="max-width: 80%; padding-bottom: 80px; padding-top: 80px;" class="col col-10 col-offset-10" />
-                <button class="button button-large button-custom col col-33 col-offset-33" ng-click="reset()">Redo Quiz</button>
+                <button class="button button-medium button-custom col col-33 col-offset-33" ng-click="reset()">Redo Quiz</button>
+                <button ng-show="isLoggedIn()" class="button button-large button-custom col col-33 col-offset-33" ng-click="submitQuiz()">Submit Results</button>
             </div>
-
         </div>
         <div class="intro" ng-show="!inProgress">
             <img src="img/quiz.gif" style="max-width: 80%; padding-bottom: 80px; padding-top: 80px;" class="col col-10 col-offset-10" />
             <button class="button button-large button-custom col col-33 col-offset-33" id="startQuiz" ng-click="start()">Start the Quiz</button>
         </div>
-
     </ion-content>
 </ion-view>

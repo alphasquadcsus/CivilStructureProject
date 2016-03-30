@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var morgan = require('morgan');
+var passport = require('passport');
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 var port = process.env.PORT || 8080; // set our port
 
@@ -18,7 +20,9 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://rick:omglol@73.41.74.242:27017/CivilApp'); // connect to our database
 var Tour = require('./app/models/tour');
 var Quiz = require('./app/models/quizzes');
-var News = require('./app/models/news');
+var User = require('./app/models/Users');
+var Passport = require('./config/passport');
+
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -39,39 +43,71 @@ router.use(function (req, res, next) {
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function (req, res) {
     res.json({
-        message: 'hooray! welcome to our api!'
+        message: "I'm up!"
     });
 });
 
-//News route
-router.route('/news')
-    // create a news post
-    .post(function (req, res) {
-        var news = new News();
-        news.username = req.body.username;
-        news.date = req.body.date;
-        news.icon = req.body.icon;
-        news.picture = req.body.picture;
-        news.post = req.body.post;
+router.post('/register', function (req, res, next) {
 
-        news.save(function (err) {
-            if (err)
-                res.send(err);
-            res.json({
-                message: 'News posted!'
-            });
+    if (!req.body.username || !req.body.password || !req.body.password2) {
+        return res.status(400).json({
+            message: 'Please fill out all fields!'
         });
-    })
+    }
 
-.get(function (req, res) {
-    News.find(function (err, news) {
-        if (err)
-            res.send(err);
-        res.json(news);
+    if (req.body.password !== req.body.password2) {
+        return res.status(400).json({
+            message: 'Passwords do not match!'
+        });
+    }
+
+    if (req.body.password.length < 6) {
+        return res.status(400).json({
+            message: 'Password must be at least 6 characters!'
+        });
+    }
+
+    if (req.body.username.length < 6) {
+        return res.status(400).json({
+            message: 'Username must be at least 6 characters!'
+        });
+    }
+
+    var user = new User();
+    user.username = req.body.username;
+    user.setPassword(req.body.password);
+
+    user.save(function (err) {
+        if (err) {
+            return next(err);
+        }
+
+        return res.json({
+            token: user.generateJWT()
+        });
     });
 });
 
+router.post('/login', function (req, res, next) {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).json({
+            message: 'Please fill out all fields'
+        });
+    }
 
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (user) {
+            return res.json({
+                token: user.generateJWT()
+            });
+        } else {
+            return res.status(401).json(info);
+        }
+    })(req, res, next);
+});
 
 // on routes that end in /tours
 router.route('/tours')
@@ -84,6 +120,7 @@ router.route('/tours')
         tour.rating = req.body.rating;
         tour.icon = req.body.icon;
         tour.description = req.body.description;
+        tour.technicaldescription = req.body.technicaldescription;
 
         tour.save(function (err) {
             if (err)
@@ -94,7 +131,6 @@ router.route('/tours')
         });
     })
 
-// get all the tours (accessed at GET http://localhost:8080/api/tours)
 .get(function (req, res) {
     Tour.find({}, function (err, tours) {
         if (err)
@@ -166,7 +202,7 @@ router.route('/tours/:tour_id')
 .get(function (req, res) {
     Tour.find({
         'idno': req.params.tour_id
-    }, ('idno tourtype title rating technical description pics'), function (err, tour) {
+    }, ('idno tourtype title rating technical description technicaldescription pics'), function (err, tour) {
         if (err)
             res.send(err);
         res.json(tour);
@@ -184,7 +220,6 @@ router.route('/tours/:tour_id')
         tour.save(function (err) {
             if (err)
                 res.send(err);
-
             res.json({
                 message: 'Tour updated!'
             });
@@ -207,24 +242,19 @@ router.route('/tours/:tour_id')
     });
 });
 
-
 //Rate a tour
 router.route('/rate/:tour_id')
     .put(function (req, res) {
         Tour.find({
             'idno': req.params.tour_id
-        }, ('ratings rating'), function (err, tour) {
+        }, ('ratingssum ratingscount rating'), function (err, tour) {
             if (err || req.body.ratings < 1 || req.body.ratings > 5) {
                 res.send(err);
                 return;
             }
-            tour[0].ratings.push(req.body.ratings);
-            var result = 0;
-            for (var i = 0; i < tour[0].ratings.length; i++) {
-                result += tour[0].ratings[i];
-            }
-            tour[0].rating = result / tour[0].ratings.length;
-
+            tour[0].ratingssum += req.body.ratings;
+            tour[0].ratingscount ++;
+            tour[0].rating = tour[0].ratingssum / tour[0].ratingscount;
             tour[0].save(function (err) {
                 if (err)
                     res.send(err);
@@ -238,7 +268,6 @@ router.route('/rate/:tour_id')
 
 
 // on routes that end in /quizzes/:quiz_id
-// ----------------------------------------------------
 router.route('/quizzes/:quiz_id')
 
 //get the quiz with that id (accessed at GET http://localhost:8080/api/quizzes/:quiz_id)
@@ -253,9 +282,30 @@ router.route('/quizzes/:quiz_id')
     });
 });
 
+router.route('/user/:username')
+    .put(function (req, res) {
+        User.find({
+            'username': req.body.username
+        }, ('ratings rating'), function (err, tour) {
+            tour[0].ratings.push(req.body.ratings);
+            var result = 0;
+
+            tour[0].rating = result / tour[0].ratings.length;
+
+            tour[0].save(function (err) {
+                if (err)
+                    res.send(err);
+                res.json({
+                    message: 'Quiz submitted!'
+                });
+
+            });
+        });
+    });
+
 // REGISTER OUR ROUTES
 app.use('/api', router);
 
 // START THE SERVER
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('Server started on port ' + port);

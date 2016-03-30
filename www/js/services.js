@@ -1,5 +1,60 @@
 angular.module('app.services', ['ionic'])
 
+//********************************************* <Authentication Services> *********************************************\\
+
+.factory('auth', ['$http', '$window', function ($http, $window) {
+        var auth = {};
+
+        auth.saveToken = function (token) {
+            $window.localStorage['flapper-news-token'] = token;
+        };
+
+        auth.getToken = function () {
+            return $window.localStorage['flapper-news-token'];
+        };
+
+        auth.isLoggedIn = function () {
+            var token = auth.getToken();
+
+            if (token) {
+                var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+                return payload.exp > Date.now() / 1000;
+            } else {
+                return false;
+            }
+        };
+
+        auth.currentUser = function () {
+            if (auth.isLoggedIn()) {
+                var token = auth.getToken();
+                var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+                return payload.username;
+            }
+        };
+
+        auth.register = function (user) {
+            return $http.post('http://localhost:8080/api/register', user).success(function (data) {
+                auth.saveToken(data.token);
+            });
+        };
+
+        auth.logIn = function (user) {
+            return $http.post('http://localhost:8080/api/login', user).success(function (data) {
+                auth.saveToken(data.token);
+            });
+        };
+
+        auth.logOut = function () {
+            $window.localStorage.removeItem('flapper-news-token');
+        };
+        return auth;
+
+}])
+    //********************************************* <//Authentication Services> *********************************************\\
+
+
 //********************************************* <Tour Services> *********************************************\\
 //These services retrieve the unique identifier (id #) of the tour, the title, the rating, and icon
 //They are used when listing the tours in the tour page, and listing the available quizzes in the quiz page.
@@ -73,9 +128,9 @@ angular.module('app.services', ['ionic'])
                     return data;
                 });
         },
-        setRate: function (id) {
-            //return $http.put('https://civilappcsus.herokuapp.com/api/rate/' + id);
-            return $http.put('http://localhost:8080/api/rate/' + id)
+        setRate: function (id, data) {
+            //return $http.put('https://civilappcsus.herokuapp.com/api/rate/' + id, data);
+            return $http.put('http://localhost:8080/api/rate/' + id, data)
                 .success(function (data) {
                     return data;
                 })
@@ -84,7 +139,7 @@ angular.module('app.services', ['ionic'])
                 });
         }
     };
-    
+
 }])
 
 //********************************************* <//Tour Services> *********************************************\\
@@ -102,7 +157,6 @@ angular.module('app.services', ['ionic'])
     };
 
     var getQuestion = function (questions, id) {
-        console.log(questions);
         if (id < questions.length) {
             return questions[id];
         } else {
@@ -110,9 +164,20 @@ angular.module('app.services', ['ionic'])
         }
     };
 
+
     return {
         getQuestion: getQuestion,
-        getQuiz: getQuiz
+        getQuiz: getQuiz,
+        submitQuiz: function (data) {
+            //return $http.put('https://civilappcsus.herokuapp.com/api/user/' + id);
+            return $http.put('http://localhost:8080/api/user/' + data)
+                .success(function (data) {
+                    return data;
+                })
+                .error(function (data) {
+                    return data;
+                });
+        }
     };
 
 }])

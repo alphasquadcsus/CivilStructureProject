@@ -3,31 +3,10 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content>
-
         <div class="item item-divider">
             Choose Tour Type
         </div>
-
         <div class="list" id="options">
-
-<!--            <ion-item id="steel" ng-click="setTourMarkers('steeltours')" ui-sref="app.tabs.mapview">
-                Steel
-            </ion-item>-->
-
-
-            <!--            <ion-item id="concrete" ui-sref="app.tabs.mapview" ng-click="setTourMarkers('concretetours')">Concrete</ion-item>
-                <ion-item id="timber">
-                    Timber
-                </ion-item>
-                <ion-item id="lateral">
-                    Lateral
-                </ion-item>
-                <ion-item id="connections">
-                    Connections
-                </ion-item>
-                <ion-item id="all">
-                    All
-                </ion-item>-->
             <ion-radio id="steel" icon="ion-location" ng-model="tours.name" value="steeltours">
                 Steel
             </ion-radio>
@@ -47,10 +26,8 @@
                 All
             </ion-radio>
         </div>
-
         <button class="button ion-map button-large button-custom col col-33 col-offset-33" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
             View Map
         </button>
-
     </ion-content>
 </ion-view>

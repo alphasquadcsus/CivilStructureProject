@@ -1,0 +1,34 @@
+<ion-view view-title="Log-In" name="login-view">
+    <ion-content class="padding">
+        <div class="list card">
+            <div class="item item-avatar">
+                <img src="img/Sacramento_State_Hornets_Logo.png"> Welcome to Sacramento States' Civil Structure Tour App!
+            </div>
+            <div class="item item-body">
+                If you are a student or technical professional, please login to view a specialized view of various campus Civil Structures.
+            </div>
+        </div>
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="Username" ng-model="user.username">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="user.password">
+            </label>
+        </div>
+        <div class="" style="margin-top: 10px;">
+            <center>
+                <p id="wronganswer" ng-show="error">Error! {{error.message}}</p>
+            </center>
+            <button class="button button-block button-custom" ng-click="logIn()">Log In</button>
+            <center>
+                <p id="wronganswer">No account? Please take a few seconds to tell us more about you</p>
+            </center>
+            <button class="button button-small button-custom col col-33 col-offset-33" ui-sref="app.register">Register</button>
+            <center>
+                <p id="correctanswer">Not a student or professional and just want to learn more?</p>
+            </center>
+            <button class="button button-medium ion-ios-redo button-custom col col-33 col-offset-33" ui-sref="app.tabs.map"> Skip</button>
+        </div>
+    </ion-content>
+</ion-view>

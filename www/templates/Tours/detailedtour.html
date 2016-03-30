@@ -2,19 +2,16 @@
     <ion-nav-buttons side="left"> </ion-nav-buttons>
     <ion-content ng-repeat="tour in tours">
         <section class="home-container">
-
             <div class="row header">
                 <div class="col text-center">
                     {{tour.title}}
                 </div>
             </div>
-
             <a class="item item-list-detail">
                 <ion-scroll direction="x">
                     <img ng-repeat="picture in tour.pics" ng-src="{{picture.src}}" ng-click="showImages($index)" class="image-list-thumb" />
                 </ion-scroll>
             </a>
-
             <div class="row icon-row">
                 <div class="col text-center">
                     <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
@@ -23,9 +20,7 @@
                     <button class="button button-large button-custom" ui-sref="app.mapview">View on map</button>
                 </div>
             </div>
-
         </section>
-
         <div class="card">
             <div class="item item-divider">
                 Description
@@ -34,13 +29,17 @@
                 {{tour.description}}
             </div>
         </div>
-
-        <div class="col text-center">
-            <button class="button button-large button-custom" ng-disabled="{{buttonDisable}}" ng-click="showPopup()">Rate this site</button>
+        <div class="col text-center" ng-show="isLoggedIn()">
+            <div class="card">
+                <div class="item item-divider">
+                    Technical Description
+                </div>
+                <div class="item item-text-wrap">
+                    {{tour.technicaldescription}}
+                </div>
+            </div>
+            <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+            <button class="button button-medium button-custom" ng-click="submitRating()" ng-disabled="rated">Rate this site</button>
         </div>
-
-        <button class="button button-full button-positive" ng-click="showtechnicalModal()">
-            View technical information
-        </button>
     </ion-content>
 </ion-view>

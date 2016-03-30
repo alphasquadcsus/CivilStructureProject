@@ -4,7 +4,7 @@
  // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
  // the 2nd parameter is an array of 'requires'
  // 'starter.controllers' is found in controllers.js
- angular.module('app', ['ionic', 'app.controllers', 'app.services'])
+ angular.module('app', ['ionic', 'app.controllers', 'app.services', 'ionic-ratings'])
 
  .run(function ($ionicPlatform) {
      $ionicPlatform.ready(function () {
@@ -24,20 +24,49 @@
 
  .config(function ($stateProvider, $urlRouterProvider) {
      $stateProvider
-
          .state('app', {
-         url: "/app",
-         abstract: true,
-         templateUrl: "templates/Menu/menu.html",
-         controller: 'appCtrl'
+             url: "/app",
+             abstract: true,
+             templateUrl: "templates/Menu/menu.html",
+             controller: 'appCtrl'
+         })
+
+     .state('app.login', {
+         url: "/login",
+         views: {
+             'menuContent': {
+                 templateUrl: "templates/Menu/login.html",
+                 controller: 'authCtrl'
+             }
+         },
+         onEnter: ['$state', 'auth', function ($state, auth) {
+             if (auth.isLoggedIn()) {
+                 $state.go('app.tabs.map');
+             }
+  }]
      })
+
+     .state('app.register', {
+         url: '/register',
+         views: {
+             'menuContent': {
+                 templateUrl: "templates/Menu/register.html",
+                 controller: 'authCtrl'
+             }
+         },
+         onEnter: ['$state', 'auth', function ($state, auth) {
+             if (auth.isLoggedIn()) {
+                 $state.go('app.tabs.map');
+             }
+                }]
+     })
+
 
      .state('app.tabs', {
          url: "/tabs",
          views: {
              'menuContent': {
-                 templateUrl: "templates/Tabs/tabs.html",
-                 //controller: "tabCtrl"
+                 templateUrl: "templates/Tabs/tabs.html"
              }
          }
      })
@@ -145,8 +174,7 @@
          url: '/tours',
          views: {
              'tab-tours': {
-                 templateUrl: 'templates/Tabs/tab-tours.html',
-                 //controller: 'toursCtrl'
+                 templateUrl: 'templates/Tabs/tab-tours.html'
              }
          }
      })
@@ -220,7 +248,6 @@
              }
          }
      });
-
      // if none of the above states are matched, use this as the fallback
-     $urlRouterProvider.otherwise('/app/tabs');
+     $urlRouterProvider.otherwise('/app/login');
  });

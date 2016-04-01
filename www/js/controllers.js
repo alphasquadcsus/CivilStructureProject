@@ -249,7 +249,7 @@ angular.module('app.controllers', ['ionic'])
     };
 })
 
-.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup) {
+.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $state) {
 
     $ionicSideMenuDelegate.canDragContent(false);
 
@@ -270,6 +270,40 @@ angular.module('app.controllers', ['ionic'])
         $scope.map = map;
 		drawMarkers(directionsService, directionsDisplay, marker);*/
         // above code will work if line below does not
+
+		
+		if ($scope.tourmarkers.length-1 == $scope.currentStop){
+               
+                 var myPopup = $ionicPopup.show({
+                        template: '<input type="Finish"',
+                        title: 'Congradulation, you finished the tour!',
+                        subTitle: 'options:',
+                        scope: $scope,
+                        buttons: [
+                          { text: 'EXIT',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                              ionic.Platform.exitApp();
+                            }
+                          },
+                          {
+                            text: '<b>DIFFENT TOUR</b>',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                $state.go('app.tabs.map');
+                                
+                                //app.tabs.
+                                //$state.go("tab.premapCtrl");
+                            }
+                          }
+                        ]
+                      });
+
+                      myPopup.then(function(res) {
+                        console.log('Tapped!', res);
+                      });
+    };
+        
         onSuccessDrawMarker(position);
         console.log("moving forward" + $scope.currentStop);
     };
@@ -277,14 +311,11 @@ angular.module('app.controllers', ['ionic'])
     $scope.prevStop = function () {
         $scope.currentStop--;
         onSuccessDrawMarker(position);
-        console.log("moving back" + $scope.currentStop);
+        console.log("moving back" + $scope.currentStop);	
     };
 
     ///////////////////Directions Display//////////////////////
-    var directionsDisplay = new google.maps.DirectionsRenderer({
-        suppressMarkers: true
-    });
-
+    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
     var directionsService = new google.maps.DirectionsService;
 
     var drawMarkers = function (directionsService, directionsDisplay, marker) {
@@ -332,7 +363,6 @@ angular.module('app.controllers', ['ionic'])
 
 
             var stopKey = distancesCopy.indexOf(distances[$scope.currentStop]);
-
 
 
             markers = new google.maps.Marker({
@@ -386,7 +416,7 @@ angular.module('app.controllers', ['ionic'])
         title: 'SAC STATE'
     });
 
-
+//////////////////////////////////////////refreshes live tracking///////////////////////////////////////////////////////////
 
     var onSuccess = function (position) {
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
@@ -405,7 +435,8 @@ angular.module('app.controllers', ['ionic'])
     });
 
 
-    ///////This new onSuccessDrawMarker and watchPosition refreshes drawMarkers at a slower time to prevent query timeout    
+/////////////////This new onSuccessDrawMarker and watchPosition refreshes drawMarkers at a slower time to prevent query timeout
+    
     var onSuccessDrawMarker = function (position) {
         marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
         directionsDisplay.setMap(map);
@@ -414,7 +445,8 @@ angular.module('app.controllers', ['ionic'])
     };
 
     navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
-        maximumAge: 5000,
+        maximumAge: 2000, // 1 sec = 1000 
+		timeout: 5400000, // 1 hour = 3600000, hour and half = 5400000
         enableHighAcuracy: true
     });
-});
+});	

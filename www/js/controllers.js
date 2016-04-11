@@ -280,7 +280,7 @@ angular.module('app.controllers', ['ionic'])
                         subTitle: 'options:',
                         scope: $scope,
                         buttons: [
-                          { text: 'EXIT',
+                          { text: 'BACK',
                             type: 'button-positive',
                             onTap: function(e) {
                               ionic.Platform.exitApp();
@@ -294,6 +294,13 @@ angular.module('app.controllers', ['ionic'])
                                 
                                 //app.tabs.
                                 //$state.go("tab.premapCtrl");
+                            }
+                          },
+                                                      {
+                            text: '<b>SURVEY</b>',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                $state.go(window.open('https://www.google.com')); //change website to the surverymonkey page
                             }
                           }
                         ]
@@ -338,8 +345,8 @@ angular.module('app.controllers', ['ionic'])
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
             content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
                 '<br />' +
-                '<p>' +
-
+                '<p> <a href="https://www.csus.edu" target="blank">Go to tour site</a>' +
+//ui-sref="app.tabs.mapview">setTourMarkers(tours.name)
                 '</p>';
 
             infoWindow = new google.maps.InfoWindow({

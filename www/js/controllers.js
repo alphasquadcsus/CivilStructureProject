@@ -276,7 +276,7 @@ angular.module('app.controllers', ['ionic'])
                
                  var myPopup = $ionicPopup.show({
                         template: '<input type="Finish"',
-                        title: 'Congradulation, you finished the tour!',
+                        title: 'Congratulations, you finished the tour!',
                         subTitle: 'options:',
                         scope: $scope,
                         buttons: [
@@ -287,7 +287,7 @@ angular.module('app.controllers', ['ionic'])
                             }
                           },
                           {
-                            text: '<b>DIFFENT TOUR</b>',
+                            text: 'DIFFERENT TOUR',
                             type: 'button-positive',
                             onTap: function(e) {
                                 $state.go('app.tabs.map');
@@ -297,10 +297,10 @@ angular.module('app.controllers', ['ionic'])
                             }
                           },
                                                       {
-                            text: '<b>SURVEY</b>',
+                            text: 'SURVEY',
                             type: 'button-positive',
                             onTap: function(e) {
-                                $state.go(window.open('https://www.google.com')); //change website to the surverymonkey page
+                                $state.go(window.open('https://www.surveymonkey.com/r/6H55Y2H'));
                             }
                           }
                         ]

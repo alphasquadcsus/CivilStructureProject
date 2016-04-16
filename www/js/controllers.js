@@ -1,4 +1,5 @@
 angular.module('app.controllers', ['ionic'])
+
     .controller('appCtrl', ['$scope', 'auth', function ($scope, auth, $ionicSideMenuDelegate) {
         $scope.isLoggedIn = auth.isLoggedIn;
         $scope.currentUser = auth.currentUser;
@@ -12,6 +13,11 @@ angular.module('app.controllers', ['ionic'])
 .controller('authCtrl', ['$scope', '$state', 'auth', function ($scope, $state, auth) {
     $scope.user = {};
     $scope.user.type = "student";
+    $scope.professional = false;
+
+    $scope.professionaluser = function (bool) {
+        $scope.professional = bool;
+    };
 
     $scope.register = function () {
         auth.register($scope.user).error(function (error) {
@@ -30,7 +36,7 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.directive('hideTabs', function ($rootScope) {
+/*.directive('hideTabs', function ($rootScope) {
     return {
         restrict: 'A',
         link: function ($scope, $el) {
@@ -40,7 +46,7 @@ angular.module('app.controllers', ['ionic'])
             });
         }
     };
-})
+})*/
 
 .controller('concretetoursCtrl', ['$scope', 'concretetours', 'tourmarkers', function ($scope, tours, tourmarkers) {
     tours.success(function (data) {
@@ -166,7 +172,7 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.controller('detailedquizCtrl', ['$scope', '$http', '$location', 'quiz', '$ionicPopup', function ($scope, $http, $location, quiz, $ionicPopup) {
+.controller('detailedquizCtrl', ['$scope', '$ionicHistory', '$http', '$location', 'quiz', '$ionicPopup', function ($scope, $ionicHistory, $http, $location, quiz, $ionicPopup) {
     $scope.foundquestions = false;
     quiz.getQuiz($location.path().split("/")[4]).success(function (data) {
         $scope.questions = data[0].questions;
@@ -174,6 +180,7 @@ angular.module('app.controllers', ['ionic'])
     });
 
     $scope.start = function () {
+        $ionicHistory.clearHistory();
         if ($scope.foundquestions) {
             $scope.id = 0;
             $scope.quizOver = false;
@@ -185,7 +192,6 @@ angular.module('app.controllers', ['ionic'])
             $ionicPopup.alert({
                 title: 'This tour site has no quiz questions!'
             });
-
         }
     };
 
@@ -227,15 +233,19 @@ angular.module('app.controllers', ['ionic'])
     $scope.submitQuiz = function () {
         $scope.data = {
             quizId: $location.path().split("/")[4],
+            course: $scope.course,
+            date: new Date().toLocaleString(),
             score: $scope.score,
             total: $scope.numberofquestions
         };
-        //console.log($scope.data);
-        quiz.submitQuiz($scope.data).success(function () {
-            //$scope.rated = true;
-            console.log("success");
+        quiz.submitQuiz($scope.currentUser(), $scope.data).success(function () {
+            $ionicPopup.alert({
+                title: 'Your Quiz has been submitted!'
+            });
+            $ionicHistory.clearHistory();
+            $scope.reset();
+            $location.path('#');
         });
-        //$scope.rated = true;
     };
 }])
 
@@ -246,6 +256,7 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.setTourMarkers = function (tourtype) {
         tourmarkers.setTourMarkers(tourtype);
+        //could $state.go(app.tabs.tourtype) here for nav stack, remove href link from html
     };
 })
 

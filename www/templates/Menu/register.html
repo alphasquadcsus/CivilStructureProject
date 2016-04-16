@@ -10,14 +10,20 @@
             <label class="item item-input">
                 <input type="password" placeholder="Confirm Password" ng-model="user.password2">
             </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Course: ex: ENGR203" ng-model="user.course" ng-show="!professional">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Company Name" ng-model="user.company" ng-show="professional">
+            </label>
             <center>
                 <p id="wronganswer" ng-show="error">Error! {{error.message}}</p>
             </center>
         </div>
-        <ion-radio ng-model="user.type" value="student">
+        <ion-radio ng-model="user.type" value="student" ng-click="professionaluser(false)">
             Student
         </ion-radio>
-        <ion-radio ng-model="user.type" value="professional">
+        <ion-radio ng-model="user.type" value="professional" ng-click="professionaluser(true)">
             Professional
         </ion-radio>
         <button class="button button-block button-custom" ng-click="register()">Register</button>

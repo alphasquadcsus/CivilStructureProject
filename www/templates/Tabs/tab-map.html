@@ -7,27 +7,25 @@
             Choose Tour Type
         </div>
         <div class="list" id="options">
-            <ion-radio id="steel" icon="ion-location" ng-model="tours.name" value="steeltours">
+            <ion-item id="timber" ng-model="tours.name" value="shorttours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+                Top 10
+            </ion-item>
+            <ion-item id="steel" ng-model="tours.name" value="steeltours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
                 Steel
-            </ion-radio>
-            <ion-radio id="concrete" icon="ion-location" ng-model="tours.name" value="concretetours">
+            </ion-item>
+            <ion-item id="concrete" ng-model="tours.name" value="concretetours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
                 Concrete
-            </ion-radio>
-            <ion-radio id="timber" icon="ion-location" ng-model="tours.name" value="timbertours">
+            </ion-item>
+            <ion-item id="timber" ng-model="tours.name" value="timbertours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
                 Timber
-            </ion-radio>
-            <ion-radio id="steel" icon="ion-location" ng-model="tours.name" value="lateraltours">
+            </ion-item>
+            <ion-item id="steel" ng-model="tours.name" value="lateraltours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
                 Lateral
-            </ion-radio>
-            <ion-radio id="concrete" icon="ion-location" ng-model="tours.name" value="connectionstours">
+            </ion-item>
+            <ion-item id="concrete" ng-model="tours.name" value="connectionstours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
                 Connections
-            </ion-radio>
-            <ion-radio id="timber" icon="ion-location" ng-model="tours.name" value="tours">
-                All
-            </ion-radio>
+            </ion-item>
         </div>
-        <button class="button ion-map button-large button-custom col col-33 col-offset-33" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
-            View Map
-        </button>
+        <center id="correctanswer" class="icon ion-android-locate"> Please enable High Accuracy GPS on your device for best tour experience</center>
     </ion-content>
 </ion-view>

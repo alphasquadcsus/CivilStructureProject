@@ -12,14 +12,6 @@
                     <img ng-repeat="picture in tour.pics" ng-src="{{picture.src}}" ng-click="showImages($index)" class="image-list-thumb" />
                 </ion-scroll>
             </a>
-            <div class="row icon-row">
-                <div class="col text-center">
-                    <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
-                </div>
-                <div class="col text-center">
-                    <button class="button button-large button-custom" ui-sref="app.mapview">View on map</button>
-                </div>
-            </div>
         </section>
         <div class="card">
             <div class="item item-divider">
@@ -36,6 +28,11 @@
                 </div>
                 <div class="item item-text-wrap">
                     {{tour.technicaldescription}}
+                </div>
+            </div>
+            <div class="row icon-row">
+                <div class="col text-center">
+                    <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
                 </div>
             </div>
             <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>

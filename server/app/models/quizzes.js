@@ -10,7 +10,6 @@ var QuizSchema = new Schema({
 			answer: Number,
             hint : String
         }
-    
 });
 
 module.exports = mongoose.model('Quiz', QuizSchema);

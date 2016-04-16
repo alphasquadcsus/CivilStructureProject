@@ -9,6 +9,15 @@ var UserSchema = new Schema({
         lowercase: true,
         unique: true
     },
+    type: String,
+    company: String,
+    course: String,
+    quizzes: [{
+        quizId: Number,
+        date: String,
+        score: Number,
+        total: Number
+    }],
     hash: String,
     salt: String
 });

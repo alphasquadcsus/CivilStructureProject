@@ -20,7 +20,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://rick:omglol@73.41.74.242:27017/CivilApp'); // connect to our database
 var Tour = require('./app/models/tour');
 var Quiz = require('./app/models/quizzes');
-var User = require('./app/models/Users');
+var User = require('./app/models/users');
 var Passport = require('./config/passport');
 
 
@@ -75,6 +75,11 @@ router.post('/register', function (req, res, next) {
 
     var user = new User();
     user.username = req.body.username;
+    user.type = req.body.type;
+    if (user.type == "student")
+        user.course = req.body.course;
+    if (user.type == "professional")
+        user.company = req.body.company;
     user.setPassword(req.body.password);
 
     user.save(function (err) {
@@ -138,6 +143,17 @@ router.route('/tours')
         res.json(tours);
     });
 });
+
+router.route('/shorttours')
+    .get(function (req, res) {
+        Tour.find({
+            'tourtype': "short"
+        }, ('idno title rating icon lat lon'), function (err, tours) {
+            if (err)
+                res.send(err);
+            res.json(tours);
+        });
+    });
 
 router.route('/concretetours')
     .get(function (req, res) {
@@ -207,39 +223,6 @@ router.route('/tours/:tour_id')
             res.send(err);
         res.json(tour);
     });
-})
-
-// update the tour with this id
-.put(function (req, res) {
-    Tour.findById(req.params.tour_id, function (err, tour) {
-
-        if (err)
-            res.send(err);
-
-        tour.name = req.body.name;
-        tour.save(function (err) {
-            if (err)
-                res.send(err);
-            res.json({
-                message: 'Tour updated!'
-            });
-        });
-
-    });
-})
-
-// delete the tour with this id
-.delete(function (req, res) {
-    Tour.remove({
-        _id: req.params.tour_id
-    }, function (err, tour) {
-        if (err)
-            res.send(err);
-
-        res.json({
-            message: 'Successfully deleted'
-        });
-    });
 });
 
 //Rate a tour
@@ -285,14 +268,16 @@ router.route('/quizzes/:quiz_id')
 router.route('/user/:username')
     .put(function (req, res) {
         User.find({
-            'username': req.body.username
-        }, ('ratings rating'), function (err, tour) {
-            tour[0].ratings.push(req.body.ratings);
-            var result = 0;
-
-            tour[0].rating = result / tour[0].ratings.length;
-
-            tour[0].save(function (err) {
+            'username': req.params.username
+        }, ('date, quizId, score, total, course'), function (err, user) {
+   /*         user[0].quizzes.quizId = req.body.quizId;
+            user[0].quizzes.date = new Date().toJSON().slice(0,10);
+            user[0].quizzes.course = req.body.course;
+            user[0].quizzes.score = req.body.score;
+            user[0].quizzes.total = req.body.total;*/
+            user[0].quizzes = req.body;
+            user[0].quizzes.push(req.body);
+            user[0].save(function (err) {
                 if (err)
                     res.send(err);
                 res.json({

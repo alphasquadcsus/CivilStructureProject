@@ -5,11 +5,11 @@
             <button class="button icon-left ion-navigate button-custom" ng-click="setTourMarkers('concretetours')" ui-sref="app.tabs.mapview" >Start the Tour</button>
         </div>
         <div class="list">
-            <div class="item item-divider"> Detailed sites </div>
+            <div class="item item-divider">Detailed site information</div>
             <a class="item item-avatar" ng-repeat="concretetour in concretetours" href="#/app/tabs/tours/{{concretetour.idno}}">
                 <img src="{{concretetour.icon}}" />
                 <h2>{{concretetour.title}}</h2>
-                <p>{{concretetour.rating}}</p>
+                <p>Avg Rating: {{concretetour.rating}}</p>
             </a>
         </div>
     </ion-content>

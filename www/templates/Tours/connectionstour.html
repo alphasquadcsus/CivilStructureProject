@@ -5,11 +5,11 @@
             <button class="button icon-left ion-navigate button-custom" ng-click="setTourMarkers('connectionstours')" ui-sref="app.tabs.mapview">Start the Tour</button>
         </div>
         <div class="list">
-            <div class="item item-divider"> Detailed sites </div>
+            <div class="item item-divider">Detailed site information</div>
             <a class="item item-avatar" ng-repeat="connectionstour in connectionstours" href="#/app/tabs/tours/{{connectionstour.idno}}">
                 <img src="{{connectionstour.icon}}" />
                 <h2>{{connectionstour.title}}</h2>
-                <p>{{connectionstour.rating}}</p>
+                <p>Avg Rating: {{connectionstour.rating}}</p>
             </a>
         </div>
     </ion-content>

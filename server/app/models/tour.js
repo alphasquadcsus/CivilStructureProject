@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-    //ObjectId = Schema.ObjectId;
+    ObjectId = Schema.ObjectId;
 
 
 var TourSchema = new Schema({
-    idnum: Number,
-    //idnum: ObjectId,
+    idnum: ObjectId,
     tourtype: [String],
     title: String,
     ratingssum: Number,

@@ -267,14 +267,53 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.nextStop = function () {
         $scope.currentStop++;
-        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		directionsDisplay.setMap(map);
+        /*marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		directionsDisplaydirectionsDisplay.setMap(map);
         $scope.map = map;
 		drawMarkers(directionsService, directionsDisplay, marker);
         // above code will work if line below does not
         onSuccessDrawMarker(position);
-        console.log("moving forward" + $scope.currentStop);
-    };
+        console.log("moving forward" + $scope.currentStop);*/
+        
+        		
+		if ($scope.tourmarkers.length-1 == $scope.currentStop){
+               
+                 var myPopup = $ionicPopup.show({
+                        template: '<input type="Finish"',
+                        title: 'Congratulations, you finished the tour!',
+                        subTitle: '<a href="https://www.surveymonkey.com/r/6H55Y2H">Review of app:</a> '  ,
+                        scope: $scope,
+                        buttons: [
+                          { text: 'BACK',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                              ionic.Platform.exitApp();
+                            }
+                          },
+                          {
+                            text: 'DIFFERENT TOUR',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                window.history.back(); 
+                            }
+                          }/*,
+                            {
+                            text: 'SURVEY',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                             //   $state.go(window.open());
+                            }
+                          }*/
+                        ]
+                      });
+
+                      myPopup.then(function(res) {
+                        console.log('Tapped!', res);
+                      });
+        
+        
+                }; 
+        }
 
     $scope.prevStop = function () {
         $scope.currentStop--;
@@ -306,11 +345,13 @@ angular.module('app.controllers', ['ionic'])
         var distancesCopy = [];
         var shortest = -1;
         
-        var desirelink = tourtype;
+        var desiretour = 'steel';
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
             content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
                 '<br />' +
+                '<a href="#/app/tabs/steel"> Go to tour site</a>' +
+                ///tours/{{'+desiredLink+'.idno}}
                 '</p>';
 
             infoWindow = new google.maps.InfoWindow({
@@ -332,10 +373,7 @@ angular.module('app.controllers', ['ionic'])
 
             distances.sort();
 
-
             var stopKey = distancesCopy.indexOf(distances[$scope.currentStop]);
-
-
 
             markers = new google.maps.Marker({
                 label: "S",
@@ -416,7 +454,8 @@ angular.module('app.controllers', ['ionic'])
     };
 
     navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
-        maximumAge: 5000,
+        maximumAge: 2000,
+        timeout: 5400000, 
         enableHighAcuracy: true
     });
 });

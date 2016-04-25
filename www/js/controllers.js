@@ -289,7 +289,7 @@ angular.module('app.controllers', ['ionic'])
 
     var directionsService = new google.maps.DirectionsService;
 
-    var drawMarkers = function (directionsService, directionsDisplay, marker) {
+    var drawMarkers = function (directionsService, directionsDisplay, marker, tourtype) {
 
         var markers;
         var content;
@@ -305,12 +305,12 @@ angular.module('app.controllers', ['ionic'])
         var distances = [];
         var distancesCopy = [];
         var shortest = -1;
+        
+        var desirelink = tourtype;
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
             content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
                 '<br />' +
-                '<p>' +
-
                 '</p>';
 
             infoWindow = new google.maps.InfoWindow({

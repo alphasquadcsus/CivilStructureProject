@@ -6,7 +6,7 @@
         </div>
         <div class="list">
             <div class="item item-divider">Detailed site information</div>
-            <a class="item item-avatar" ng-repeat="timbertour in timbertours" href="#/app/tabs/tours/{{timbertour.idno}}">
+            <a class="item item-avatar" ng-repeat="timbertour in timbertours" href="#/app/tabs/tours/{{timbertour._id}}">
                 <img src="{{timbertour.icon}}" />
                 <h2>{{timbertour.title}}</h2>
                 <p>Avg Rating: {{timbertour.rating}}</p>

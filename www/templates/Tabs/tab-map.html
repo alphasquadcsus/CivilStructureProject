@@ -1,4 +1,4 @@
-<ion-view view-title="Map">
+<ion-view view-title="Start Tour">
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
@@ -7,22 +7,22 @@
             Choose Tour Type
         </div>
         <div class="list" id="options">
-            <ion-item id="timber" ng-model="tours.name" value="shorttours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="timber" ng-click="setTourMarkers('shorttours')">
                 Top 10
             </ion-item>
-            <ion-item id="steel" ng-model="tours.name" value="steeltours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="steel" ng-click="setTourMarkers('steeltours')">
                 Steel
             </ion-item>
-            <ion-item id="concrete" ng-model="tours.name" value="concretetours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="concrete" ng-click="setTourMarkers('concretetours')">
                 Concrete
             </ion-item>
-            <ion-item id="timber" ng-model="tours.name" value="timbertours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="timber" ng-click="setTourMarkers('timbertours')">
                 Timber
             </ion-item>
-            <ion-item id="steel" ng-model="tours.name" value="lateraltours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="steel" ng-click="setTourMarkers('lateraltours')">
                 Lateral
             </ion-item>
-            <ion-item id="concrete" ng-model="tours.name" value="connectionstours" ng-click="setTourMarkers(tours.name)" ui-sref="app.tabs.mapview">
+            <ion-item id="concrete" ng-click="setTourMarkers('connectionstours')">
                 Connections
             </ion-item>
         </div>

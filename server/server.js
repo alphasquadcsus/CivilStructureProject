@@ -116,25 +116,6 @@ router.post('/login', function (req, res, next) {
 
 // on routes that end in /tours
 router.route('/tours')
-    // create a tour (accessed at POST http://localhost:8080/tours)
-    .post(function (req, res) {
-        var tour = new Tour();
-        tour.id = req.body.id;
-        tour.tourtype = req.body.tourtype;
-        tour.title = req.body.title;
-        tour.rating = req.body.rating;
-        tour.icon = req.body.icon;
-        tour.description = req.body.description;
-        tour.technicaldescription = req.body.technicaldescription;
-
-        tour.save(function (err) {
-            if (err)
-                res.send(err);
-            res.json({
-                message: 'Tour created!'
-            });
-        });
-    })
 
 .get(function (req, res) {
     Tour.find({}, function (err, tours) {
@@ -217,10 +198,11 @@ router.route('/tours/:tour_id')
 //get the tour with that id (accessed at GET http://localhost:8080/api/tours/:tour_id)
 .get(function (req, res) {
     Tour.find({
-        'idno': req.params.tour_id
-    }, ('idno tourtype title rating technical description technicaldescription pics'), function (err, tour) {
-        if (err)
+        '_id': req.params.tour_id
+    }, ('_id idno tourtype title rating technical description technicaldescription pics'), function (err, tour) {
+        if (err) {
             res.send(err);
+        }
         res.json(tour);
     });
 });
@@ -249,18 +231,16 @@ router.route('/rate/:tour_id')
         });
     });
 
-
 // on routes that end in /quizzes/:quiz_id
 router.route('/quizzes/:quiz_id')
-
 //get the quiz with that id (accessed at GET http://localhost:8080/api/quizzes/:quiz_id)
 .get(function (req, res) {
     Quiz.find({
-        'idno': req.params.quiz_id
+        '_id': req.params.quiz_id
     }, ('idno questions'), function (err, quiz) {
         if (err)
             res.send(err);
-
+        
         res.json(quiz);
     });
 });
@@ -270,11 +250,6 @@ router.route('/user/:username')
         User.find({
             'username': req.params.username
         }, ('date, quizId, score, total, course'), function (err, user) {
-   /*         user[0].quizzes.quizId = req.body.quizId;
-            user[0].quizzes.date = new Date().toJSON().slice(0,10);
-            user[0].quizzes.course = req.body.course;
-            user[0].quizzes.score = req.body.score;
-            user[0].quizzes.total = req.body.total;*/
             user[0].quizzes = req.body;
             user[0].quizzes.push(req.body);
             user[0].save(function (err) {
@@ -291,6 +266,5 @@ router.route('/user/:username')
 // REGISTER OUR ROUTES
 app.use('/api', router);
 
-// START THE SERVER
 app.listen(port);
 console.log('Server started on port ' + port);

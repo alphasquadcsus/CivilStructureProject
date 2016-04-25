@@ -179,7 +179,7 @@ angular.module('app.services', ['ionic'])
         getQuestion: getQuestion,
         getQuiz: getQuiz,
         submitQuiz: function (id, data) {
-            //return $http.put('https://civilappcsus.herokuapp.com/api/user/' + id);
+            //return $http.put('https://civilappcsus.herokuapp.com/api/user/' + id, data);
             return $http.put('http://localhost:8080/api/user/' +id, data)
                 .success(function (data) {
                     return data;

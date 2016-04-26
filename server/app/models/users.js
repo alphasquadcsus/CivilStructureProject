@@ -13,7 +13,7 @@ var UserSchema = new Schema({
     company: String,
     course: String,
     quizzes: [{
-        quizId: Number,
+        quizId: String,
         date: String,
         score: Number,
         total: Number

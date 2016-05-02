@@ -251,7 +251,7 @@ angular.module('app.controllers', ['ionic'])
     };
 })
 
-.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $location) {
+.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup) {
 
     $ionicSideMenuDelegate.canDragContent(false);
 
@@ -345,19 +345,13 @@ angular.module('app.controllers', ['ionic'])
         var distances = [];
         var distancesCopy = [];
         var shortest = -1;
-        
-        var desiretour = 'steel';
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
             content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
                 '<br />' +
-                '<a href="#/app/tabs/quizzes/{{steel.idno}}"> Go to quiz</a>' +
+                '<a href="#/app/tabs/quizzes/'+$scope.tourmarkers[i].idno+'"> Go to quiz</a>' +
                 '<br />' +
-                '<a href="#/app/tabs/tours/{{steel_.id}}"> Go to Tour info </a>' +
-                    //Attempts to access tour detail:
-                    //tours/{{'+desiredLink+'.idno}}
-                    //tours.getTour($location.path().split("/")[4]).success(function (data) { $scope.tours = data; });
-                    //#/app/tabs/quizzes/{{concretetour.idno}} 
+                '<a href="#/app/tabs/tours/'+$scope.tourmarkers[i]._id+'">Go to Tour info </a>' +
                 '</p>';
 
             infoWindow = new google.maps.InfoWindow({

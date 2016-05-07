@@ -129,7 +129,7 @@ angular.module('app.services', ['ionic'])
 
     return {
         getTour: function (id) {
-            //return $http.get('https://civilappcsus.herokuapp.com/api/tours/' + id);
+            //return $http.get('https://civilappcsus.herokuapp.com/api/tours/' + id)
             return $http.get('http://localhost:8080/api/tours/' + id)
                 .success(function (data) {
                     return data;
@@ -139,7 +139,7 @@ angular.module('app.services', ['ionic'])
                 });
         },
         setRate: function (id, data) {
-            //return $http.put('https://civilappcsus.herokuapp.com/api/rate/' + id, data);
+            //return $http.put('https://civilappcsus.herokuapp.com/api/rate/' + id, data)
             return $http.put('http://localhost:8080/api/rate/' + id, data)
                 .success(function (data) {
                     return data;
@@ -179,7 +179,7 @@ angular.module('app.services', ['ionic'])
         getQuestion: getQuestion,
         getQuiz: getQuiz,
         submitQuiz: function (id, data) {
-            //return $http.put('https://civilappcsus.herokuapp.com/api/user/' + id, data);
+            //return $http.put('https://civilappcsus.herokuapp.com/api/user/' + id, data)
             return $http.put('http://localhost:8080/api/user/' +id, data)
                 .success(function (data) {
                     return data;

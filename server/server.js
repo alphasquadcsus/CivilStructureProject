@@ -73,6 +73,12 @@ router.post('/register', function (req, res, next) {
         });
     }
 
+    if (req.body.studentid.length !== 9 || req.body.studentid % 1 !== 0) {
+        return res.status(400).json({
+            message: 'Student ID must be 9 digits only!'
+        });
+    }
+
     var user = new User();
     user.username = req.body.username;
     user.type = req.body.type;
@@ -211,14 +217,14 @@ router.route('/tours/:tour_id')
 router.route('/rate/:tour_id')
     .put(function (req, res) {
         Tour.find({
-            'idno': req.params.tour_id
+            '_id': req.params.tour_id
         }, ('ratingssum ratingscount rating'), function (err, tour) {
             if (err || req.body.ratings < 1 || req.body.ratings > 5) {
                 res.send(err);
                 return;
             }
             tour[0].ratingssum += req.body.ratings;
-            tour[0].ratingscount ++;
+            tour[0].ratingscount++;
             tour[0].rating = tour[0].ratingssum / tour[0].ratingscount;
             tour[0].save(function (err) {
                 if (err)
@@ -233,17 +239,17 @@ router.route('/rate/:tour_id')
 
 // on routes that end in /quizzes/:quiz_id
 router.route('/quizzes/:quiz_id')
-//get the quiz with that id (accessed at GET http://localhost:8080/api/quizzes/:quiz_id)
-.get(function (req, res) {
-    Quiz.find({
-        '_id': req.params.quiz_id
-    }, ('idno questions'), function (err, quiz) {
-        if (err)
-            res.send(err);
-        
-        res.json(quiz);
+    //get the quiz with that id (accessed at GET http://localhost:8080/api/quizzes/:quiz_id)
+    .get(function (req, res) {
+        Quiz.find({
+            '_id': req.params.quiz_id
+        }, ('idno questions'), function (err, quiz) {
+            if (err)
+                res.send(err);
+
+            res.json(quiz);
+        });
     });
-});
 
 router.route('/user/:username')
     .put(function (req, res) {

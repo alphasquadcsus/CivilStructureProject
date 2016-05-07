@@ -1,11 +1,11 @@
 <ion-view view-title="Log-In" name="login-view">
-    <ion-content class="padding">
-        <center>
+    <ion-content>
+        <center style="padding: 30px;">
             <p id="correctanswer">Not a student or professional and just want to learn more?</p>
+            <button class="button button-medium ion-ios-redo button-custom" ui-sref="app.tabs.map"> Start Tour</button>
         </center>
-        <button class="button button-medium ion-ios-redo button-custom col col-33 col-offset-33" ui-sref="app.tabs.map"> Start Tour</button>
         <div class="list card">
-            <div class="item item-avatar">
+            <div class="item item-avatar item-text-wrap">
                 <img src="img/Sacramento_State_Hornets_Logo.png"> Welcome to Sac State's Structural Engineering Tour App
             </div>
             <div class="item item-body">
@@ -20,16 +20,15 @@
                 <input type="password" placeholder="Password" ng-enter="logIn()" ng-model="user.password">
             </label>
         </div>
-        <div class="" style="margin-top: 10px;">
+        <div>
             <center>
                 <p id="wronganswer" ng-show="error">Error! {{error.message}}</p>
             </center>
             <button class="button button-block button-custom" ng-click="logIn()">Log In</button>
-            <center>
+            <center style="padding: 30px;">
                 <p id="wronganswer">No account? Please take a few seconds to tell us more about you</p>
+                <button class="button button-small button-custom col col-33" ui-sref="app.register">Register</button>
             </center>
-            <button class="button button-small button-custom col col-33 col-offset-33" ui-sref="app.register">Register</button>
-
         </div>
     </ion-content>
 </ion-view>

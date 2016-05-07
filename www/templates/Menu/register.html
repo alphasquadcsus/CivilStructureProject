@@ -1,5 +1,5 @@
 <ion-view view-title="Register">
-    <ion-content class="padding">
+    <ion-content>
         <div class="list list-inset">
             <label class="item item-input">
                 <input type="text" placeholder="Username" ng-model="user.username">
@@ -9,6 +9,9 @@
             </label>
             <label class="item item-input">
                 <input type="password" placeholder="Confirm Password" ng-model="user.password2">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Student ID" ng-model="user.studentid" ng-show="!professional">
             </label>
             <label class="item item-input">
                 <input type="text" placeholder="Course: ex: ENGR203" ng-model="user.course" ng-show="!professional">

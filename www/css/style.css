@@ -11,12 +11,12 @@
      color: #cba757 !important;
      background-color: #095a1f!important;
  }
-
+ 
  .custom-text {
      font-size: 16px;
      padding: 10px;
  }
-
+ 
  .button-icon {
      color: #ffffff !important;
  }
@@ -26,11 +26,19 @@
      color: #cba757 !important;
      font-size: 24px !important;
  }
-
+ 
  .button-user {
      background-color: #000000 !important;
      color: #cba757 !important;
      font-size: 16px !important;
+ }
+ 
+ #tourtitle {
+     font-size: 45px;
+     font-weight: bold !important;
+     color: black;
+     padding: 25px;
+     line-height: 100%;
  }
  
  #picdescription {
@@ -87,14 +95,13 @@
  }
  
  #lateral {
-     background: url("http://www.myfreetextures.com/wp-content/uploads/2011/06/brushedmetal103.jpg");
      color: #3b3a3a;
      font-size: 24px;
      font-weight: bold !important;
      padding: 30px;
      text-align: center;
  }
-
+ 
  #all {
      font-size: 24px;
      font-weight: bold !important;
@@ -144,13 +151,13 @@
  .scroll {
      height: 100%;
  }
- 
+ /*
  .home-container {
      display: -webkit-flex;
      -webkit-flex-direction: column;
      height: 70%;
  }
- 
+ /*
  .home-container > .row {
      -webkit-flex: 1;
  }
@@ -159,7 +166,7 @@
      -webkit-flex: 5 !important;
      -webkit-align-items: center;
      background-color: #1b7934;
- }
+ }*/
  
  .icon-row {
      -webkit-align-items: center;

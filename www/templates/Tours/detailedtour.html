@@ -3,7 +3,7 @@
     <ion-content ng-repeat="tour in tours">
         <section class="home-container">
             <div class="row header">
-                <div class="col text-center">
+                <div id="tourtitle" class="col text-center">
                     {{tour.title}}
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
             </div>
         </div>
-        <div class="col text-center" ng-show="isLoggedIn()">
+        <div ng-show="isLoggedIn()">
             <div class="card">
                 <div class="item item-divider">
                     Technical Description
@@ -35,8 +35,10 @@
                     {{tour.technicaldescription}}
                 </div>
             </div>
-            <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
-            <button class="button button-medium button-custom" ng-click="submitRating()" ng-disabled="rated">Rate this site</button>
+            <div class="col text-center">
+                <ionic-ratings ratingsobj='ratingsObject'></ionic-ratings>
+                <button class="button button-medium button-custom text-center" ng-click="submitRating()" ng-disabled="rated">Rate this site</button>
+            </div>
         </div>
     </ion-content>
 </ion-view>

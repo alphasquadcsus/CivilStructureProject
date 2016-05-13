@@ -267,15 +267,7 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.nextStop = function () {
         $scope.currentStop++;
-        /*marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-		directionsDisplaydirectionsDisplay.setMap(map);
-        $scope.map = map;
-		drawMarkers(directionsService, directionsDisplay, marker);
-        // above code will work if line below does not
-        onSuccessDrawMarker(position);
-        console.log("moving forward" + $scope.currentStop);*/
-        
-        		
+       		
 		if ($scope.tourmarkers.length-1 == $scope.currentStop){
                
                  var myPopup = $ionicPopup.show({
@@ -323,10 +315,7 @@ angular.module('app.controllers', ['ionic'])
     };
 
     ///////////////////Directions Display//////////////////////
-    var directionsDisplay = new google.maps.DirectionsRenderer({
-        suppressMarkers: true
-    });
-
+    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
     var directionsService = new google.maps.DirectionsService;
 
     var drawMarkers = function (directionsService, directionsDisplay, marker) {
@@ -347,12 +336,11 @@ angular.module('app.controllers', ['ionic'])
         var shortest = -1;
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
-            content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
-                '<br />' +
-                '<a href="#/app/tabs/quizzes/'+$scope.tourmarkers[i].idno+'"> Go to quiz</a>' +
-                '<br />' +
-                '<a href="#/app/tabs/tours/'+$scope.tourmarkers[i]._id+'">Go to Tour info </a>' +
-                '</p>';
+            content = '<h2 style="text-align:center; background-color:green; color:gold;">' + $scope.tourmarkers[i].title + '</h2>' +
+            '<br />' +
+            '<button style="float:left;" onclick=window.location="#/app/tabs/quizzes/'+$scope.tourmarkers[i].idno+'"> <b>Go to quiz</b></button>' + 
+            '<button style="float:right;" onclick=window.location="#/app/tabs/tours/'+$scope.tourmarkers[i]._id+'"><b> Go to Tour info</b></button>' + 
+            '</p>';
 
             infoWindow = new google.maps.InfoWindow({
                 content: content
@@ -384,6 +372,7 @@ angular.module('app.controllers', ['ionic'])
 
             //SCOPE: 'this' refers to the current 'markers' object, we pass in the info and marker
             google.maps.event.addListener(markers, 'click', function () {
+                if(infoWindow){infoWindow.close(map, this);}
                 infoWindow.setContent(this.info);
                 infoWindow.open(map, this);
             });

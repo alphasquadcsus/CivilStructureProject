@@ -36,15 +36,7 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.controller('concretetoursCtrl', ['$scope', 'concretetours', 'tourmarkers', function ($scope, tours, tourmarkers) {
-    $scope.tours = {
-        name: "none"
-    };
-
-    $scope.setTourMarkers = function (tourtype) {
-        tourmarkers.setTourMarkers(tourtype);
-    };
-
+.controller('concretetoursCtrl', ['$scope', 'concretetours', function ($scope, tours) {
     tours.success(function (data) {
         $scope.concretetours = data;
     });
@@ -74,7 +66,14 @@ angular.module('app.controllers', ['ionic'])
     });
 }])
 
-.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', '$ionicBackdrop', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$state', '$ionicNavBarDelegate', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate, $state) {
+
+    $scope.clickQuiz = function (quizid) {
+        $state.go('app.tabs.detailedquiz', {
+            tourId: quizid
+        });
+    };
+
     $scope.data = {};
     $scope.rated = false;
 
@@ -83,13 +82,10 @@ angular.module('app.controllers', ['ionic'])
     });
 
     $scope.$on('$locationChangeStart', function () {
-        //$scope.technicalmodal.hide();
-        //$scope.technicalmodal.remove();
-        //$scope.modal.hide();
-        //$scope.modal.remove();
-        $scope.closeModal();
-        $scope.closetechnicalModal();
-
+        if ($scope.modal) {
+            $scope.modal.hide();
+            $scope.modal.remove();
+        }
     });
 
     $scope.ratingsObject = {
@@ -133,25 +129,6 @@ angular.module('app.controllers', ['ionic'])
         });
     };
 
-    $scope.showtechnicalModal = function () {
-        $ionicModal.fromTemplateUrl('templates/Tours/technicalinfo.html', {
-            scope: $scope
-        }).then(function (modal) {
-            $scope.technicalmodal = modal;
-            $scope.technicalmodal.show();
-        });
-    };
-
-    $scope.closeModal = function () {
-        $scope.modal.hide();
-        $scope.modal.remove();
-    };
-
-    $scope.closetechnicalModal = function () {
-        $scope.technicalmodal.hide();
-        $scope.technicalmodal.remove();
-    };
-
     $scope.updateSlideStatus = function (slide) {
         var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
         if (zoomFactor == $scope.zoomMin) {
@@ -162,15 +139,25 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.controller('detailedquizCtrl', ['$scope', '$ionicHistory', '$http', '$location', 'quiz', '$ionicPopup', function ($scope, $ionicHistory, $http, $location, quiz, $ionicPopup) {
+.controller('detailedquizCtrl', ['$scope', '$ionicHistory', '$http', '$location', 'quiz', '$ionicPopup', '$ionicNavBarDelegate', '$state', function ($scope, $ionicHistory, $http, $location, quiz, $ionicPopup, $ionicNavBarDelegate, $state) {
     $scope.foundquestions = false;
+
+    $scope.backtoList = function () {
+        $state.go('app.tabs.quizzes');
+        //$ionicHistory.clearHistory();
+    };
+
+    $scope.$on("$ionicView.enter", function () {
+        $ionicNavBarDelegate.showBackButton(true);
+    });
+
     quiz.getQuiz($location.path().split("/")[4]).success(function (data) {
         $scope.questions = data[0].questions;
         $scope.foundquestions = true;
     });
 
     $scope.start = function () {
-        $ionicHistory.clearHistory();
+        $ionicNavBarDelegate.showBackButton(false);
         if ($scope.foundquestions) {
             $scope.id = 0;
             $scope.quizOver = false;
@@ -188,6 +175,7 @@ angular.module('app.controllers', ['ionic'])
     $scope.reset = function () {
         $scope.inProgress = false;
         $scope.score = 0;
+        $ionicNavBarDelegate.showBackButton(true);
     };
 
     $scope.getQuestion = function () {
@@ -205,7 +193,7 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.checkAnswer = function (option) {
         var ans = option;
-        if (ans == $scope.options[$scope.answer]) {
+        if (ans === $scope.options[$scope.answer]) {
             $scope.score++;
             $scope.correctAns = true;
         } else {
@@ -232,11 +220,12 @@ angular.module('app.controllers', ['ionic'])
             $ionicPopup.alert({
                 title: 'Your Quiz has been submitted!'
             });
-            $ionicHistory.clearHistory();
+            //$ionicHistory.clearHistory();
             $scope.reset();
-            $location.path('#');
+            //$location.path('#');
         });
     };
+
 }])
 
 .controller('premapCtrl', function ($scope, tourmarkers, $state) {
@@ -251,9 +240,14 @@ angular.module('app.controllers', ['ionic'])
     };
 })
 
-.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup) {
+.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $window, $compile) {
 
-    $ionicSideMenuDelegate.canDragContent(false);
+    console.log("Controller reloaded");
+
+    $scope.$on("$ionicView.enter", function (scopes, states) {
+        google.maps.event.trigger(map, 'resize');
+        $ionicSideMenuDelegate.canDragContent(false);
+    });
 
     $scope.getTourMarkers = function () {
         tourmarkers.getTourMarkers().success(function (data) {
@@ -274,47 +268,49 @@ angular.module('app.controllers', ['ionic'])
         // above code will work if line below does not
         onSuccessDrawMarker(position);
         console.log("moving forward" + $scope.currentStop);*/
-        
-        		
-		if ($scope.tourmarkers.length-1 == $scope.currentStop){
-               
-                 var myPopup = $ionicPopup.show({
-                        template: '<input type="Finish"',
-                        title: 'Congratulations, you finished the tour!',
-                        subTitle: '<a href="https://www.surveymonkey.com/r/6H55Y2H">Review of app:</a> '  ,
-                        scope: $scope,
-                        buttons: [
-                          { text: 'BACK',
-                            type: 'button-positive',
-                            onTap: function(e) {
-                              ionic.Platform.exitApp();
-                              $scope.currentStop--;
-                            }
-                          },
-                          {
-                            text: 'DIFFERENT TOUR',
-                            type: 'button-positive',
-                            onTap: function(e) {
-                                window.history.back(); 
-                            }
-                          }/*,
-                            {
-                            text: 'SURVEY',
-                            type: 'button-positive',
-                            onTap: function(e) {
-                             //   $state.go(window.open());
-                            }
-                          }*/
-                        ]
-                      });
 
-                      myPopup.then(function(res) {
-                        console.log('Tapped!', res);
-                      });
-        
-        
-                }; 
-        }
+
+        if ($scope.tourmarkers.length - 1 == $scope.currentStop) {
+
+            var myPopup = $ionicPopup.show({
+                template: '<input type="Finish"',
+                title: 'Congratulations, you finished the tour!',
+                subTitle: '<a href="https://www.surveymonkey.com/r/6H55Y2H">Review of app:</a> ',
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'BACK',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                            ionic.Platform.exitApp();
+                            $scope.currentStop--;
+                        }
+                          },
+                    {
+                        text: 'DIFFERENT TOUR',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                            window.history.back();
+                        }
+                          }
+                    /*,
+                                                {
+                                                text: 'SURVEY',
+                                                type: 'button-positive',
+                                                onTap: function(e) {
+                                                 //   $state.go(window.open());
+                                                }
+                                              }*/
+                        ]
+            });
+
+            myPopup.then(function (res) {
+                console.log('Tapped!', res);
+            });
+
+
+        };
+    }
 
     $scope.prevStop = function () {
         $scope.currentStop--;
@@ -347,15 +343,20 @@ angular.module('app.controllers', ['ionic'])
         var shortest = -1;
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
-            content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
-                '<br />' +
-                '<a href="#/app/tabs/quizzes/'+$scope.tourmarkers[i].idno+'"> Go to quiz</a>' +
-                '<br />' +
-                '<a href="#/app/tabs/tours/'+$scope.tourmarkers[i]._id+'">Go to Tour info </a>' +
-                '</p>';
+
+
+              content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
+                  '<br />' +
+                  '<a href="#/app/tabs/quizzes/' + $scope.tourmarkers[i]._id + '"> Go to quiz</a>' +
+                  '<a button class="button button-large button-custom" href="#/app/tabs/quizzes/' + $scope.tourmarkers[i].idno + '"">Take Quiz</a>' +
+                  '<br />' +
+                  '<a href="#/app/tabs/tours/' + $scope.tourmarkers[i]._id + '">Go to Tour info </a>' +
+                  '</p>';
+
+            var compiled = $compile(content)($scope);
 
             infoWindow = new google.maps.InfoWindow({
-                content: content
+                content: compiled[0]
             });
 
             var point = new google.maps.LatLng($scope.tourmarkers[i].lat, $scope.tourmarkers[i].lon);
@@ -455,7 +456,7 @@ angular.module('app.controllers', ['ionic'])
 
     navigator.geolocation.watchPosition(onSuccessDrawMarker, onError, {
         maximumAge: 2000,
-        timeout: 5400000, 
+        timeout: 5400000,
         enableHighAcuracy: true
     });
 });

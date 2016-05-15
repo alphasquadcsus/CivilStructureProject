@@ -1,9 +1,10 @@
 <ion-view view-title="Steel Quizzes">
-  <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="steeltour in steeltours" href="#/app/tabs/quizzes/{{steeltour.idno}}">
-        {{steeltour.title}}
-      </ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="steeltour in steeltours" href="#/app/tabs/quizzes/{{steeltour.idno}}">
+                {{steeltour.title}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>

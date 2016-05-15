@@ -1,9 +1,10 @@
 <ion-view view-title="Timber Quizzes">
-  <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="timbertour in timbertours" href="#/app/tabs/quizzes/{{timbertour.idno}}">
-        {{timbertour.title}}
-      </ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="timbertour in timbertours" href="#/app/tabs/quizzes/{{timbertour.idno}}">
+                {{timbertour.title}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>

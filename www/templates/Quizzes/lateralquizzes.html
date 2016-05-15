@@ -1,9 +1,10 @@
 <ion-view view-title="Lateral Quizzes">
-  <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="lateraltour in lateraltours" href="#/app/tabs/quizzes/{{lateraltour.idno}}">
-        {{lateraltour.title}}
-      </ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-nav-buttons side="left"></ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="lateraltour in lateraltours" href="#/app/tabs/quizzes/{{lateraltour.idno}}">
+                {{lateraltour.title}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>

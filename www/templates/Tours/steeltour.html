@@ -1,9 +1,6 @@
 <ion-view view-title="Steel Tour">
     <ion-nav-buttons side="left"> </ion-nav-buttons>
     <ion-content>
-        <div id="startTour" class="col text-center">
-            <button class="button icon-left ion-navigate button-custom" ng-click="setTourMarkers('steeltours')" ui-sref="app.tabs.mapview">Start the Tour</button>
-        </div>
         <div class="list">
             <div class="item item-divider">Detailed site information</div>
             <a class="item item-avatar" ng-repeat="steeltour in steeltours" href="#/app/tabs/tours/{{steeltour._id}}">

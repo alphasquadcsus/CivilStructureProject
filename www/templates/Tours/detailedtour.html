@@ -23,7 +23,9 @@
         </div>
         <div class="row icon-row">
             <div class="col text-center">
-                <a button class="button button-large button-custom" ng-href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>
+               <!-- <a button class="button button-large button-custom" href="#/app/tabs/quizzes/{{tour.idno}}">Take Quiz</a>-->
+                <!--<a button class="button button-large button-custom" ui-sref="app.tabs.detailedquiz({tourId : tour.idno})">Take Quiz</a>-->
+                <a button class="button button-large button-custom" ng-click="clickQuiz(tour.idno)">Take Quiz</a>
             </div>
         </div>
         <div ng-show="isLoggedIn()">

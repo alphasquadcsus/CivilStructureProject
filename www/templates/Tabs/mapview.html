@@ -1,8 +1,5 @@
-<ion-view view-title="Map" ng-init="getTourMarkers()" hide-tabs>
-   <!-- <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>-->
-    <ion-nav-buttons side="right"> <!-- right -->
+<ion-view cache-view="true" view-title="Map" ng-init="getTourMarkers()">
+    <ion-nav-buttons side="right">
         <button class="button" ng-disabled="currentStop == 0" ng-click="prevStop()">Previous Stop</button>
         <button class="button" ng-disabled="tourmarkers.length-1 == currentStop" ng-click="nextStop()">Next Stop</button> 
     </ion-nav-buttons>

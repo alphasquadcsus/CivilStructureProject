@@ -108,7 +108,11 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.submitRating = function () {
         tours.setRate($location.path().split("/")[4], $scope.data).success(function () {
+            $ionicPopup.alert({
+                title: 'Rating Submitted!'
+            });
             $scope.rated = true;
+
         });
         $scope.rated = true;
     };
@@ -144,7 +148,6 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.backtoList = function () {
         $state.go('app.tabs.quizzes');
-        //$ionicHistory.clearHistory();
     };
 
     $scope.$on("$ionicView.enter", function () {
@@ -220,9 +223,7 @@ angular.module('app.controllers', ['ionic'])
             $ionicPopup.alert({
                 title: 'Your Quiz has been submitted!'
             });
-            //$ionicHistory.clearHistory();
             $scope.reset();
-            //$location.path('#');
         });
     };
 
@@ -240,7 +241,7 @@ angular.module('app.controllers', ['ionic'])
     };
 })
 
-.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $window, $compile) {
+.controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $window) {
 
     console.log("Controller reloaded");
 
@@ -335,18 +336,14 @@ angular.module('app.controllers', ['ionic'])
 
         for (var i = 0; i < $scope.tourmarkers.length; i++) {
 
+            content = '<div class="scrollFix">' +
+                '<h2 style="text-align:center; background-color:#095a1f; color: #cba757;">' + $scope.tourmarkers[i].title + '</h2>' +
+                '<a class="button button-small button-map" href="#/app/tabs/quizzes/' + $scope.tourmarkers[i].idno + '"> <b>Take a Quiz</b></a>' +
+                '<a class="button button-small button-map" href="#/app/tabs/tours/' + $scope.tourmarkers[i]._id + '"><b>View Site Info</b></a>' +
+                '</p>' + '</div>';
 
-            content = '<h2>' + $scope.tourmarkers[i].title + '</h2>' +
-                '<br />' +
-                '<a href="#/app/tabs/quizzes/' + $scope.tourmarkers[i]._id + '"> Go to quiz</a>' +
-                '<a button class="button button-large button-custom" href="#/app/tabs/quizzes/' + $scope.tourmarkers[i].idno + '"">Take Quiz</a>' +
-                '<br />' +
-                '<a href="#/app/tabs/tours/' + $scope.tourmarkers[i]._id + '">Go to Tour info </a>' +
-                '</p>';
-
-            var compiled = $compile(content)($scope);
             infoWindow = new google.maps.InfoWindow({
-                content: compiled[0]
+                content: content
             });
 
             var point = new google.maps.LatLng($scope.tourmarkers[i].lat, $scope.tourmarkers[i].lon);
@@ -417,7 +414,8 @@ angular.module('app.controllers', ['ionic'])
         label: "*",
         position: myLatlng,
         map: map,
-        title: 'SAC STATE'
+        title: 'SAC STATE',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
     });
 
 

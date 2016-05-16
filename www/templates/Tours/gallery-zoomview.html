@@ -1,4 +1,5 @@
 <div class="modal image-modal transparent" on-swipe-down="closeModal()" ng-repeat="tour in tours">
+    <button ng-click="closeModal()" class="button button-icon ion-close-round col col-10 col-offset-90"></button>
     <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" id="timber">
         <ion-slide ng-repeat="picture in tour.pics">
             <ion-scroll direction="xy" scrollbar-x="false" scrollbar-y="false" zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%" delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)">

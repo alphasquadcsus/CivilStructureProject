@@ -88,6 +88,11 @@ angular.module('app.controllers', ['ionic'])
         }
     });
 
+    $scope.closeModal = function () {
+        $scope.modal.hide();
+        $scope.modal.remove()
+    };
+
     $scope.ratingsObject = {
         iconOn: 'ion-ios-star',
         iconOff: 'ion-ios-star-outline',
@@ -243,8 +248,6 @@ angular.module('app.controllers', ['ionic'])
 
 .controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $window) {
 
-    console.log("Controller reloaded");
-
     $scope.$on("$ionicView.enter", function (scopes, states) {
         google.maps.event.trigger(map, 'resize');
         $ionicSideMenuDelegate.canDragContent(false);
@@ -253,7 +256,6 @@ angular.module('app.controllers', ['ionic'])
     $scope.getTourMarkers = function () {
         tourmarkers.getTourMarkers().success(function (data) {
             $scope.tourmarkers = data;
-            console.log($scope.tourmarkers);
             drawMarkers();
         });
     };
@@ -308,7 +310,6 @@ angular.module('app.controllers', ['ionic'])
     $scope.prevStop = function () {
         $scope.currentStop--;
         onSuccessDrawMarker(position);
-        console.log("moving back" + $scope.currentStop);
     };
 
     ///////////////////Directions Display//////////////////////
@@ -370,7 +371,6 @@ angular.module('app.controllers', ['ionic'])
                 info: content
             });
 
-            //SCOPE: 'this' refers to the current 'markers' object, we pass in the info and marker
             google.maps.event.addListener(markers, 'click', function () {
                 if (infoWindow) {
                     infoWindow.close(map, this);
@@ -411,10 +411,8 @@ angular.module('app.controllers', ['ionic'])
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     var marker = new google.maps.Marker({
-        label: "*",
         position: myLatlng,
         map: map,
-        title: 'SAC STATE',
         icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
     });
 

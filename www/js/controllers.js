@@ -66,8 +66,12 @@ angular.module('app.controllers', ['ionic'])
     });
 }])
 
-.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', '$ionicBackdrop', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$state', '$ionicNavBarDelegate', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate, $state) {
+.controller('detailedtourCtrl', ['$scope', 'detailedtour', '$location', '$ionicPopup', '$ionicModal', '$ionicBackdrop', '$ionicSlideBoxDelegate', '$ionicScrollDelegate', '$state', '$ionicNavBarDelegate', function ($scope, tours, $location, $ionicPopup, $ionicModal, $ionicBackdrop, $ionicSlideBoxDelegate, $ionicScrollDelegate, $state, $ionicNavBarDelegate) {
 
+    $scope.$on("$ionicView.enter", function () {
+        $ionicNavBarDelegate.showBackButton(true);
+    });
+    
     $scope.clickQuiz = function (quizid) {
         $state.go('app.tabs.detailedquiz', {
             tourId: quizid
@@ -90,7 +94,7 @@ angular.module('app.controllers', ['ionic'])
 
     $scope.closeModal = function () {
         $scope.modal.hide();
-        $scope.modal.remove()
+        $scope.modal.remove();
     };
 
     $scope.ratingsObject = {
@@ -117,7 +121,6 @@ angular.module('app.controllers', ['ionic'])
                 title: 'Rating Submitted!'
             });
             $scope.rated = true;
-
         });
         $scope.rated = true;
     };
@@ -148,7 +151,7 @@ angular.module('app.controllers', ['ionic'])
     };
 }])
 
-.controller('detailedquizCtrl', ['$scope', '$ionicHistory', '$http', '$location', 'quiz', '$ionicPopup', '$ionicNavBarDelegate', '$state', function ($scope, $ionicHistory, $http, $location, quiz, $ionicPopup, $ionicNavBarDelegate, $state) {
+.controller('detailedquizCtrl', ['$scope', '$http', '$location', 'quiz', '$ionicPopup', '$ionicNavBarDelegate', '$state', function ($scope, $http, $location, quiz, $ionicPopup, $ionicNavBarDelegate, $state) {
     $scope.foundquestions = false;
 
     $scope.backtoList = function () {
@@ -156,6 +159,10 @@ angular.module('app.controllers', ['ionic'])
     };
 
     $scope.$on("$ionicView.enter", function () {
+        $ionicNavBarDelegate.showBackButton(true);
+    });
+
+    $scope.$on("$ionicView.leave", function () {
         $ionicNavBarDelegate.showBackButton(true);
     });
 
@@ -248,7 +255,7 @@ angular.module('app.controllers', ['ionic'])
 
 .controller('mapCtrl', function ($scope, tourmarkers, $ionicSideMenuDelegate, $ionicPopup, $window) {
 
-    $scope.$on("$ionicView.enter", function (scopes, states) {
+    $scope.$on("$ionicView.enter", function () {
         google.maps.event.trigger(map, 'resize');
         $ionicSideMenuDelegate.canDragContent(false);
     });

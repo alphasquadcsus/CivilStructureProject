@@ -1,4 +1,4 @@
-<div class="modal image-modal transparent" on-swipe-down="closeModal()" ng-repeat="tour in tours">
+<div class="modal image-modal transparent" ng-repeat="tour in tours">
     <button ng-click="closeModal()" class="button button-icon ion-close-round col col-10 col-offset-90"></button>
     <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide" id="timber">
         <ion-slide ng-repeat="picture in tour.pics">

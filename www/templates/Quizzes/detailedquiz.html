@@ -1,6 +1,6 @@
 <ion-view cache-view="false" title="Quiz">
     <ion-nav-buttons side="left">
-        <button ng-show= "inProgress" menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        <button ng-show="inProgress" menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content>
         <div class="quiz-area" ng-show="inProgress">
@@ -33,18 +33,22 @@
                 <h1 class="title">Questions correct: {{score}} out of {{numberofquestions}}</h1>
             </div>
             <div ng-show="quizOver">
-                <h2>Quiz is over</h2>
-                <img src="img/quizend.png" style="max-width: 80%; padding-bottom: 80px; padding-top: 80px;" class="col col-10 col-offset-10" />
-                <button class="button button-medium button-custom col col-33 col-offset-33" ng-click="reset()">Redo Quiz</button>
-                <a class="button button-medium button-custom col col-33 col-offset-33" ng-click="backtoList()">Back to Quiz List</a>
-                <button ng-show="isLoggedIn()" class="button button-large button-custom col col-33 col-offset-33" ng-click="submitQuiz()">Submit Results</button>
+                <center>
+                    <img src="img/quizend.png" style="max-width: 80%; padding-bottom: 50px; padding-top: 50px;" class="col col-10 col-offset-10" />
+                    <h2>Quiz is over</h2>
+                    <button class="button button-medium button-custom" ng-click="reset()">Redo Quiz</button> <br/>
+                    <a class="button button-medium button-custom" ng-click="backtoList()">Back to Quiz List</a>
+                    <button ng-show="isLoggedIn()" class="button button-medium button-custom" ng-click="submitQuiz()">Submit Results</button>
+                </center>
             </div>
         </div>
         <div class="intro" id="startTour" ng-show="!inProgress">
-            <img src="img/quiz.gif" style="max-width: 80%; padding-bottom: 80px; padding-top: 80px;" class="col col-10 col-offset-10" />
-            <button class="button button-large button-custom col col-33 col-offset-33" id="startQuiz" ng-click="start()">Start the Quiz</button>
-            <span><center style="padding: 40px;" id="wronganswer">Warning: If you leave the Quiz Tab during the quiz, you will have to restart</center></span>
-            <a class="button button-medium button-custom col col-33 col-offset-33" ng-click="backtoList()">Back to Quiz List</a>
+            <center>
+                <img src="img/quiz.gif" style="max-width: 80%; padding-bottom: 50px; padding-top: 50px;" class="col col-10 col-offset-10" />
+                <button class="button button-large button-custom" id="startQuiz" ng-click="start()">Start the Quiz</button>
+                <span><center style="padding: 40px;" id="wronganswer">Warning: If you leave the Quiz Tab during the quiz, you will have to restart</center></span>
+                <a class="button button-medium button-custom" ng-click="backtoList()">Back to Quiz List</a>
+            </center>
         </div>
     </ion-content>
 </ion-view>
